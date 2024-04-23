@@ -1,21 +1,15 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import KeyValueAccordion from "./components/KeyValueAccordion";
-
+import Home from "./pages/Home";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./static/theme";
+import Layout from "./components/layout/Layout";
 function App() {
-  const [count, setCount] = useState(0);
-  const data = [
-    { key: "Name", value: "Test test" },
-    { key: "Age", value: "30" },
-    { key: "Email", value: "test@test.com" },
-  ];
-
   return (
-    <div>
-      <KeyValueAccordion data={data} />
-    </div>
+    <ThemeProvider theme={theme}>
+      <Layout>
+        <Home />
+      </Layout>
+    </ThemeProvider>
   );
 }
 

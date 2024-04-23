@@ -4,6 +4,33 @@
   padding: 2rem;
   text-align: center;
 }
+@font-face {
+  font-family: "Gotham";
+  src: url("./assets/fonts/gotham-office/GothamOffice-Regular.ttf")
+    format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "GothamItalic";
+  src: url("./assets/fonts/gotham-office/GothamOffice-Italic.ttf")
+    format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "GothamBold";
+  src: url("./assets/fonts/gotham-office/GothamOffice-Bold.ttf")
+    format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "GothamBoldItalic";
+  src: url("./assets/fonts/gotham-office/GothamOffice-BoldItalic.ttf")
+    format("truetype");
+  font-weight: 300;
+}
 
 .logo {
   height: 6em;
