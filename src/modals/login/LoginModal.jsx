@@ -8,6 +8,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { loginModalStyles } from "./loginModal.styles";
 
 const LoginModal = ({
   open,
@@ -23,22 +24,7 @@ const LoginModal = ({
   const theme = useTheme();
   return (
     <Modal open={open} onClose={handleClose} disableScrollLock>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          borderRadius: 4,
-          width: 350,
-          p: 4,
-          "& .MuiTextField-root": {
-            mb: 2,
-          },
-        }}
-      >
+      <Box sx={loginModalStyles.container}>
         <TextField
           label="Email"
           fullWidth
@@ -74,7 +60,7 @@ const LoginModal = ({
             </Typography>
           }
         />
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Box sx={loginModalStyles.loginButton}>
           <Button onClick={handleLogin} variant="contained">
             Login
           </Button>

@@ -5,17 +5,17 @@ import tmp from "../assets/img/tmp/tmp.jpg";
 const Home = () => {
   const productOverview = [
     { key: "GTIN", value: "4047112223459" },
-    { key: "Brand name", value: "GS1" },
-    { key: "Size", value: "Medium" },
-    { key: "Weight", value: "1.3 kg" },
-    { key: "Color", value: "Green" },
-    { key: "Main material", value: "Jeans" },
-    { key: "Category", value: "Jacket" },
-    { key: "Year of sale", value: "2024" },
-    { key: "Price", value: "159.00 BAM" },
+    { key: "Naziv brenda", value: "GS1" },
+    { key: "Veličina", value: "Medium" },
+    { key: "Težina", value: "1.3 kg" },
+    { key: "Boja", value: "Green" },
+    { key: "Glavni materijal", value: "Jeans" },
+    { key: "Kategorija", value: "Jacket" },
+    { key: "Godina prodaje", value: "2024" },
+    { key: "Cijena", value: "159.00 BAM" },
   ];
 
-  const serialNumber = [{ key: "number", value: "4722" }];
+  const serialNumber = [{ key: "broj", value: "4722" }];
 
   return (
     <div>

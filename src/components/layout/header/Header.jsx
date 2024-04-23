@@ -1,12 +1,14 @@
 import { Button, Grid } from "@mui/material";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
-import logo from "../../assets/img/logo/GS1_Bosnia_Herzegovina_Localised3_PPT_And_Word_2016-11-02.png";
+import logo from "../../../assets/img/logo/GS1_Bosnia_Herzegovina_Localised3_PPT_And_Word_2016-11-02.png";
 import { useState } from "react";
-import LoginModal from "../../modals/LoginModal";
+import LoginModal from "../../../modals/login/LoginModal";
+import { headerStyles } from "./header.styles";
 
 const Header = () => {
   const theme = useTheme();
+  const styles = headerStyles(theme);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,50 +30,14 @@ const Header = () => {
   };
 
   return (
-    <header
-      style={{
-        borderBottom: "2px solid #f26334",
-        marginBottom: 100,
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "100%",
-        backgroundColor: "white",
-      }}
-    >
+    <header style={styles.headerContainer}>
       <Grid container spacing={2}>
-        <Grid
-          item
-          xs={6}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <Grid item xs={6} style={styles.logoStyle}>
           <img src={logo} width={"30%"}></img>
         </Grid>
 
-        <Grid
-          item
-          xs={6}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: 40,
-            paddingRight: "11%",
-          }}
-        >
-          <Button
-            style={{
-              color: "white",
-              fontSize: "12px",
-              backgroundColor: theme.palette.secondary.main,
-              marginLeft: "auto",
-              fontFamily: "GothamBold",
-            }}
-            onClick={handleOpen}
-          >
+        <Grid item xs={6} style={styles.loginGrid}>
+          <Button style={styles.loginButton} onClick={handleOpen}>
             Prijava
           </Button>
         </Grid>
