@@ -33,11 +33,14 @@ const Home = () => {
         />
       </div>
       <div style={{ padding: 100 }}>
-        <KeyValueAccordion title={"Product Overview"} data={productOverview} />
-        <KeyValueAccordion title={"Serial / Batch"} data={serialNumber} />
-        <KeyValueAccordion title={"Environmental Impact"} data={serialNumber} />
-        <KeyValueAccordion title={"Material Components"} data={serialNumber} />
-        <KeyValueAccordion title={"Certificates"} data={serialNumber} />
+        <KeyValueAccordion title={"Pregled proizvoda"} data={productOverview} />
+        <KeyValueAccordion title={"Serijski broj"} data={serialNumber} />
+        <KeyValueAccordion
+          title={"Uticaj na životnu sredinu"}
+          data={serialNumber}
+        />
+        <KeyValueAccordion title={"Materijal"} data={serialNumber} />
+        <KeyValueAccordion title={"Certifikati"} data={serialNumber} />
       </div>
     </div>
   );

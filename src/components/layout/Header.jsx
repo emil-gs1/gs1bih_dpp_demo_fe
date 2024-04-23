@@ -1,10 +1,32 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import logo from "../../assets/img/logo/GS1_Bosnia_Herzegovina_Localised3_PPT_And_Word_2016-11-02.png";
+import { useState } from "react";
+import LoginModal from "../../modals/LoginModal";
 
 const Header = () => {
   const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleLogin = () => {
+    console.log("Email:", email);
+    console.log("Password:", password);
+    console.log("Zapamti me:", rememberMe);
+    handleClose();
+  };
+
   return (
     <header
       style={{
@@ -48,11 +70,23 @@ const Header = () => {
               marginLeft: "auto",
               fontFamily: "GothamBold",
             }}
+            onClick={handleOpen}
           >
-            Login
+            Prijava
           </Button>
         </Grid>
       </Grid>
+      <LoginModal
+        open={open}
+        handleClose={handleClose}
+        handleLogin={handleLogin}
+        email={email}
+        password={password}
+        rememberMe={rememberMe}
+        setEmail={setEmail}
+        setPassword={setPassword}
+        setRememberMe={setRememberMe}
+      />
     </header>
   );
 };
