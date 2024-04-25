@@ -18,12 +18,23 @@ export const headerStyles = (theme) => ({
     alignItems: "center",
     padding: 40,
     paddingRight: "11%",
+    justifyContent: "space-between",
   },
+
   loginButton: {
     color: "white",
     fontSize: "12px",
     backgroundColor: theme.palette.secondary.main,
     marginLeft: "auto",
     fontFamily: "GothamBold",
+  },
+  menuButtom: {
+    color: theme.palette.primary.main,
+    fontSize: "12px",
+    marginLeft: "auto",
+    fontFamily: "GothamBold",
+  },
+  gap: {
+    marginLeft: theme.spacing(1),
   },
 });

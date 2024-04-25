@@ -1,8 +1,15 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import KeyValueAccordion from "../components/KeyValueAccordion";
 import tmp from "../assets/img/tmp/tmp.jpg";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const Home = () => {
+  const [users, setUsers] = useState();
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+
   const productOverview = [
     { key: "GTIN", value: "4047112223459" },
     { key: "Naziv brenda", value: "GS1" },
@@ -16,6 +23,32 @@ const Home = () => {
   ];
 
   const serialNumber = [{ key: "broj", value: "4722" }];
+
+  const handleClick = () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getUsers = async () => {
+      try {
+        const response = await axiosPrivate.get("/users", {
+          signal: controller.signal,
+        });
+        console.log(response.data);
+        isMounted && setUsers(response.data);
+      } catch (err) {
+        console.log("Inside catch");
+        console.error(err);
+        navigate("/login", { state: { from: location }, replace: true });
+      }
+    };
+
+    getUsers();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  };
 
   return (
     <div>
@@ -31,6 +64,10 @@ const Home = () => {
           }}
           src={tmp}
         />
+      </div>
+
+      <div>
+        <Button onClick={handleClick}>Click to test</Button>
       </div>
       <div style={{ padding: 100 }}>
         <KeyValueAccordion title={"Pregled proizvoda"} data={productOverview} />
