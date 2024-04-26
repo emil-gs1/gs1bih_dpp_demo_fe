@@ -122,7 +122,7 @@ const Login = () => {
             />
             <Box sx={loginStyles.loginButton}>
               <Button onClick={handleLogin} variant="contained">
-                Login
+                Prijava
               </Button>
             </Box>
           </Box>

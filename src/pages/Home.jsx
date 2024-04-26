@@ -24,6 +24,25 @@ const Home = () => {
 
   const serialNumber = [{ key: "broj", value: "4722" }];
 
+  const environmentalImpact = [
+    { key: "Potrošnja vode, po jedinici", value: "15 000 litara" },
+    { key: "Sadržaj recikliranog materijala, u %", value: "40%" },
+    { key: "Potrošnja hemikalije, po jedinici", value: "8kg" },
+    { key: "Emisije GHG proizvedenog odjevnog predmeta", value: "205,4" },
+    { key: "Emisija CO2e, po jedinici ", value: "30kg" },
+    { key: "Minimalna trajnost proizvoda u godinama", value: "10 godina" },
+  ];
+  const material = [
+    { key: "Reciklirani organski pamuk", value: "90%" },
+    { key: "Poliester", value: "10%" },
+  ];
+
+  const certifcates = [
+    { key: "Grüner Knopf", value: "Da" },
+    { key: "C2C Bronze", value: "Da" },
+    { key: "GOTS", value: "Da" },
+  ];
+
   const handleClick = () => {
     let isMounted = true;
     const controller = new AbortController();
@@ -74,10 +93,10 @@ const Home = () => {
         <KeyValueAccordion title={"Serijski broj"} data={serialNumber} />
         <KeyValueAccordion
           title={"Uticaj na životnu sredinu"}
-          data={serialNumber}
+          data={environmentalImpact}
         />
-        <KeyValueAccordion title={"Materijal"} data={serialNumber} />
-        <KeyValueAccordion title={"Certifikati"} data={serialNumber} />
+        <KeyValueAccordion title={"Materijal"} data={material} />
+        <KeyValueAccordion title={"Certifikati"} data={certifcates} />
       </div>
     </div>
   );

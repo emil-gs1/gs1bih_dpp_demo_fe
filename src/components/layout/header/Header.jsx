@@ -10,6 +10,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../../../api/axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CustomizedMenus from "../../Sidebar/StyledMenu";
 
 const LOGIN_URL = "/api/User/login";
 
@@ -51,52 +52,6 @@ const Header = () => {
     setOpen(false);
   };
 
-  const handleLogin = async () => {
-    try {
-      console.log("Login called");
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email, password, rememberMe }),
-        {
-          headers: { "Content-Type": "application/json" },
-          // withCredentials: true,
-        }
-      );
-      console.log(response?.data);
-      //console.log(JSON.stringify(response));
-      const accessToken = response?.data?.token;
-      const roles = response?.data?.roles;
-      setAuth({ email, password, roles, accessToken });
-      setEmail("");
-      setPassword("");
-      // navigate(from, { replace: true });
-    } catch (err) {
-      console.log("Catch login called", err);
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("Login Failed");
-      }
-    }
-    handleClose();
-  };
-
-  const handleLogOut = () => {
-    setAuth(null);
-    toast.success("Uspješna odjava");
-  };
-
-  const handleNavigate = () => {
-    navigate("/login");
-  };
-
-  const handleAdminPage = () => {
-    navigate("/admin");
-  };
   return (
     <header style={styles.headerContainer}>
       <Grid container justifyContent="space-between" alignItems="center">
@@ -110,38 +65,44 @@ const Header = () => {
           </div>
         </Grid>
 
-        <Grid item xs={6}>
-          {loggedIn ? (
-            <React.Fragment>
-              {isAdmin && (
-                <Button style={styles.menuButtom} onClick={handleAdminPage}>
-                  Admin stranica
+        {/* <Grid item xs={6}>
+            {loggedIn ? (
+              <React.Fragment>
+                {isAdmin && (
+                  <>
+                    <Button style={styles.menuButton} onClick={handleAdminPage}>
+                      Admin stranica
+                    </Button>
+                    <CustomizedMenus style={{ marginLeft: "10px" }} />
+                  </>
+                )}
+                <Button
+                  style={{ ...styles.loginButton, marginLeft: "10px" }}
+                  onClick={handleLogOut}
+                >
+                  Odjavi se
                 </Button>
-              )}
-              <Button
-                style={{ ...styles.loginButton, marginLeft: "10px" }}
-                onClick={handleLogOut}
-              >
-                Odjavi se
-              </Button>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <Button style={styles.loginButton} onClick={handleNavigate}>
-                Prijava
-              </Button>
-              <Button
-                style={{ ...styles.loginButton, marginLeft: "10px" }}
-                onClick={handleOpen}
-              >
-                Registracija
-              </Button>
-            </React.Fragment>
-          )}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Button style={styles.loginButton} onClick={handleNavigate}>
+                  Prijava
+                </Button>
+                <Button
+                  style={{ ...styles.loginButton, marginLeft: "10px" }}
+                  onClick={handleOpen}
+                >
+                  Registracija
+                </Button>
+              </React.Fragment>
+            )}
+          </Grid> */}
+        <Grid item xs={6}>
+          <CustomizedMenus style={{ marginLeft: "10px" }} />
         </Grid>
       </Grid>
 
-      <LoginModal
+      {/* <LoginModal
         open={open}
         handleClose={handleClose}
         handleLogin={handleLogin}
@@ -151,7 +112,7 @@ const Header = () => {
         setEmail={setEmail}
         setPassword={setPassword}
         setRememberMe={setRememberMe}
-      />
+      /> */}
     </header>
   );
 };

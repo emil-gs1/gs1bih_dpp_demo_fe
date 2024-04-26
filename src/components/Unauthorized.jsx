@@ -1,17 +1,31 @@
+import { Button, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Unauthorized = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const goBack = () => navigate(-1);
 
   return (
     <section>
-      <h1>Unauthorized</h1>
+      <Typography variant="primaryTitle">Unauthorized</Typography>
       <br />
-      <p>You do not have access to the requested page.</p>
-      <div className="flexGrow">
-        <button onClick={goBack}>Go Back</button>
+      <Typography variant="tableContent">
+        Nemate pristup ovoj stranici.
+      </Typography>
+      <div style={{ marginTop: "20px" }}>
+        <Button
+          style={{
+            color: theme.palette.primary.main,
+            fontSize: "12px",
+            marginLeft: "auto",
+            fontFamily: "GothamBold",
+          }}
+          onClick={goBack}
+        >
+          Nazad
+        </Button>
       </div>
     </section>
   );
