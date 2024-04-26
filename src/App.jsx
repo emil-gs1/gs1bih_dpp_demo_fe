@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import RequireAuth from "./components/RequireAuth.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
 import Unauthorized from "./components/Unauthorized.jsx";
+import AccountSettings from "./pages/Admin/AccountSettings.jsx";
 
 const roles = {
   Admin: "Admin",
@@ -18,9 +19,10 @@ function App() {
       <Route path="*" element={<Missing />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* <Route element={<RequireAuth allowedRoles={[roles.Admin]} />}> */}
-      <Route path="/admin" element={<Dashboard />} />
-      {/* </Route> */}
+      <Route element={<RequireAuth allowedRoles={[roles.Admin]} />}>
+        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin/settings" element={<AccountSettings />} />
+      </Route>
     </Routes>
   );
 }

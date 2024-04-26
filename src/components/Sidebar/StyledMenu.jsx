@@ -3,12 +3,12 @@ import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import EditIcon from "@mui/icons-material/Edit";
 import Divider from "@mui/material/Divider";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useAuth from "../../hooks/useAuth";
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -85,14 +85,13 @@ export default function CustomizedMenus() {
     toast.success("Uspješna odjava");
   };
 
-  const handleNavigate = () => {
-    navigate("/login");
-  };
-
   const handleAdminPage = () => {
     navigate("/admin");
   };
 
+  const handleUserSettings = () => {
+    navigate("/admin/settings");
+  };
   return (
     <div>
       <Button
@@ -140,16 +139,20 @@ export default function CustomizedMenus() {
         {location.pathname === "/admin" && [
           <Divider key="divider" sx={{ my: 0.5 }} />,
 
-          <MenuItem key="" disableRipple>
+          <MenuItem key="productTable" disableRipple>
             Pregled proizvoda
           </MenuItem>,
-          <MenuItem key="" disableRipple>
+          <MenuItem key="addProduct" disableRipple>
             Dodaj proizvod
           </MenuItem>,
-          <MenuItem key="" disableRipple>
+          <MenuItem
+            key="accountSettings"
+            onClick={handleUserSettings}
+            disableRipple
+          >
             Postavke računa
           </MenuItem>,
-          <MenuItem key="" disableRipple>
+          <MenuItem key="usersSettings" disableRipple>
             Postavke korisnika
           </MenuItem>,
         ]}

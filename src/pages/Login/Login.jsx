@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../../assets/img/logo/GS1_Bosnia_Herzegovina_Localised3_PPT_And_Word_2016-11-02.png";
 import ErrorLabel from "./login.styles.jsx";
+import { LOGIN_URL } from "../../api/api.types.js";
 
 const Login = () => {
   const theme = useTheme();
@@ -27,7 +28,6 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const { setAuth } = useAuth();
   const [errMsg, setErrMsg] = useState("");
-  const LOGIN_URL = "/api/User/login";
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -61,7 +61,6 @@ const Login = () => {
         setEmail("");
         setPassword("");
         navigate(from);
-      } else {
       }
     } catch (err) {
       console.log("Catch login called", err);

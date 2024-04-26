@@ -2,10 +2,11 @@ import { Button, Typography } from "@mui/material";
 import KeyValueAccordion from "../components/KeyValueAccordion";
 import tmp from "../assets/img/tmp/tmp.jpg";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Home = () => {
+  //eslint-disable-next-line
   const [users, setUsers] = useState();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
