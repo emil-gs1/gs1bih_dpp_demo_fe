@@ -92,6 +92,10 @@ export default function CustomizedMenus() {
   const handleUserSettings = () => {
     navigate("/admin/settings");
   };
+  const handleAddProduct = () => {
+    navigate("/admin/addProduct");
+  };
+
   return (
     <div>
       <Button
@@ -142,7 +146,7 @@ export default function CustomizedMenus() {
           <MenuItem key="productTable" disableRipple>
             Pregled proizvoda
           </MenuItem>,
-          <MenuItem key="addProduct" disableRipple>
+          <MenuItem key="addProduct" onClick={handleAddProduct} disableRipple>
             Dodaj proizvod
           </MenuItem>,
           <MenuItem

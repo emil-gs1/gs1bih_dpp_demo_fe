@@ -6,6 +6,7 @@ import RequireAuth from "./components/RequireAuth.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
 import Unauthorized from "./components/Unauthorized.jsx";
 import AccountSettings from "./pages/Admin/AccountSettings.jsx";
+import AddProduct from "./pages/Product/AddProduct.jsx";
 
 const roles = {
   Admin: "Admin",
@@ -22,6 +23,7 @@ function App() {
       <Route element={<RequireAuth allowedRoles={[roles.Admin]} />}>
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/admin/settings" element={<AccountSettings />} />
+        <Route path="/admin/addProduct" element={<AddProduct />} />
       </Route>
     </Routes>
   );
