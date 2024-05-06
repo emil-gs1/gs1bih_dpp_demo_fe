@@ -1,5 +1,12 @@
-import { Grid } from "@mui/material";
 import React, { useState } from "react";
+import {
+  Button,
+  Grid,
+  Stepper,
+  Step,
+  StepLabel,
+  Typography,
+} from "@mui/material";
 
 export const Wizard = ({ steps }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -22,11 +29,25 @@ export const Wizard = ({ steps }) => {
 
   return (
     <Grid container spacing={1}>
-      {React.createElement(steps[currentStep], {
-        data: formData,
-        onNext: handleNext,
-        onPrevious: handlePrevious,
-      })}
+      <Grid item xs={12}>
+        <Typography variant="h5" gutterBottom>
+          {steps[currentStep].title}
+        </Typography>
+        <Stepper activeStep={currentStep} alternativeLabel>
+          {steps.map((step, index) => (
+            <Step key={index}>
+              <StepLabel>{step.title}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Grid>
+      <Grid item xs={12}>
+        {React.createElement(steps[currentStep].component, {
+          data: formData,
+          onNext: handleNext,
+          onPrevious: handlePrevious,
+        })}
+      </Grid>
     </Grid>
   );
 };

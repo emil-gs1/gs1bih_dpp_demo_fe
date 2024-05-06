@@ -53,10 +53,10 @@ const Login = () => {
       );
 
       const response = await promiseToast;
-
+      console.log("login repsonse", response);
       if (response.status === 200) {
-        const accessToken = response?.data?.token;
-        const roles = response?.data?.roles;
+        const accessToken = response?.data?.data.token;
+        const roles = response?.data?.data.roles;
         setAuth({ email, roles, accessToken }); //pwd removed
         setEmail("");
         setPassword("");

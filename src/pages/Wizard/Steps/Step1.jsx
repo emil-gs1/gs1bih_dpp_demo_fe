@@ -8,7 +8,7 @@ const Step1 = ({ onNext }) => {
   const [numberInput, setNumberInput] = useState("");
   const [responseData, setResponseData] = useState(null);
   const navigate = useNavigate();
-  const API_KEY = "API_KEY"; //TODO: safe
+  const API_KEY = "70e2d58f1d924a4f860e507191d170dd"; //TODO: safe
 
   useEffect(() => {
     const productInfo = localStorage.getItem("productInfo");
@@ -65,13 +65,12 @@ const Step1 = ({ onNext }) => {
   };
 
   const handleNextStep = () => {
-    // navigate("/admin/addProduct/wizard");
     onNext({ responseData });
   };
 
   return (
     <>
-      <Typography variant="primaryTitle">Informacije o proizvodu</Typography>
+      {/* <Typography variant="primaryTitle">Informacije o proizvodu</Typography> */}
       <Grid container spacing={1} style={{ marginTop: "20px" }}>
         <Grid item xs={10}>
           <TextField

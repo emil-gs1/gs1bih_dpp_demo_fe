@@ -1,7 +1,6 @@
 export const headerStyles = (theme) => ({
   headerContainer: {
     borderBottom: "2px solid #f26334",
-    marginBottom: 100,
     position: "fixed",
     top: 0,
     left: 0,
