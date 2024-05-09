@@ -8,7 +8,7 @@ const Step1 = ({ onNext }) => {
   const [numberInput, setNumberInput] = useState("");
   const [responseData, setResponseData] = useState(null);
   const navigate = useNavigate();
-  const API_KEY = "70e2d58f1d924a4f860e507191d170dd"; //TODO: safe
+  const API_KEY = "6bcaa9940dce49f9a89703804ff1f16f"; //TODO: safe
 
   useEffect(() => {
     const productInfo = localStorage.getItem("productInfo");
@@ -30,7 +30,7 @@ const Step1 = ({ onNext }) => {
     };
 
     axios
-      .post("https://grp.gs1.org/grp-st/v3/gtins/verified", requestBody, {
+      .post("https://grp.gs1.org/grp/v3.1/gtins/verified", requestBody, {
         headers,
       })
       .then((response) => {
@@ -91,16 +91,50 @@ const Step1 = ({ onNext }) => {
         </Grid>
       </Grid>
       {responseData && (
-        <div style={{ marginTop: "20px" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            textAlign: "left",
+          }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="primaryTitle">
-                License name: {responseData.licenseeName}
+                Gtin: {responseData.gtin}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="primaryTitle">
+                Brand name: {responseData.brandName[0].value}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="primaryTitle">
+                Product description: {responseData.productDescription[0].value}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="primaryTitle">
+                Global product category: {responseData.gpcCategoryCode}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="primaryTitle">
+                Net content: {responseData.netContent[0].value}{" "}
+                {responseData.netContent[0].unitCode}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="primaryTitle">
+                Country of sale: {responseData.countryOfSaleCode[0].alpha3}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Button variant="contained" onClick={handleNextStep}>
-                Sljedeci
+                Dalje
               </Button>
             </Grid>
           </Grid>

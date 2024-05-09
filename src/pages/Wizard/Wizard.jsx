@@ -7,11 +7,13 @@ import {
   StepLabel,
   Typography,
 } from "@mui/material";
+import { toast } from "react-toastify";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const Wizard = ({ steps }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
-
+  const navigate = useNavigate();
   const handleNext = (data) => {
     setFormData({ ...formData, ...data });
     if (currentStep < steps.length - 1) {
@@ -19,6 +21,15 @@ export const Wizard = ({ steps }) => {
     } else {
       console.log("Form data:", formData);
     }
+  };
+
+  const handleFinish = (data) => {
+    console.log("handle finish called");
+    setFormData({ ...formData, ...data });
+
+    toast.success("Uspjesno upisani podaci");
+    localStorage.clear();
+    navigate("/");
   };
 
   const handlePrevious = () => {
@@ -46,6 +57,7 @@ export const Wizard = ({ steps }) => {
           data: formData,
           onNext: handleNext,
           onPrevious: handlePrevious,
+          onFinish: handleFinish,
         })}
       </Grid>
     </Grid>

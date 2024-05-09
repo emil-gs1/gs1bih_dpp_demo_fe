@@ -5,45 +5,45 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
-const Step4 = ({ data, onNext, onPrevious }) => {
+const Step9 = ({ data, onNext, onPrevious, onFinish }) => {
   const [initialFormValues, setInitialFormValues] = useState({
     productID: 0,
-    performance: "",
-    recyclability: "",
-    takeBackInstructions: "",
-    recyclingInstructions: "",
-    disassemblyInstructionsSorters: "",
-    disassemblyInstructionsUser: "",
-    circularDesignStrategy: "",
-    circularDesignStrategyDescription: "",
-    repairInstructions: "",
+    supplierName: "",
+    supplierLocation: "",
+    facilityRegistry: "",
+    facilityIdentifier: "",
+    operatorRegistry: "",
+    operatorIdentifier: "",
+    countryOfOriginConfection: "",
+    countryOfOriginDyeingPrinting: "",
+    countryOfOriginWeavingKnitting: "",
   });
 
   const validationSchema = Yup.object().shape({
-    performance: Yup.string().required("Performance je obavezan"),
-    recyclability: Yup.string().required("recyclability je obavezan"),
-    takeBackInstructions: Yup.string().required(
+    supplierName: Yup.string().required("Performance je obavezan"),
+    supplierLocation: Yup.string().required("recyclability je obavezan"),
+    facilityRegistry: Yup.string().required(
       "takeBackInstructions company je obavezan"
     ),
-    recyclingInstructions: Yup.string().required(
-      "recyclingInstructions je obavezan"
+
+    facilityIdentifier: Yup.string().required("Performance je obavezan"),
+    operatorRegistry: Yup.string().required("recyclability je obavezan"),
+    operatorIdentifier: Yup.string().required(
+      "takeBackInstructions company je obavezan"
     ),
-    disassemblyInstructionsSorters: Yup.string(),
-    disassemblyInstructionsUser: Yup.string().required(
-      "disassemblyInstructionsUser location je obavezan"
+
+    countryOfOriginConfection: Yup.string().required("Performance je obavezan"),
+    countryOfOriginDyeingPrinting: Yup.string().required(
+      "recyclability je obavezan"
     ),
-    circularDesignStrategy: Yup.string().required(
-      "circularDesignStrategy je obavezan"
-    ),
-    circularDesignStrategyDescription: Yup.string(),
-    repairInstructions: Yup.string().required(
-      "repairInstructions location je obavezan"
+    countryOfOriginWeavingKnitting: Yup.string().required(
+      "takeBackInstructions company je obavezan"
     ),
   });
 
   useEffect(() => {
     const productId = localStorage.getItem("productId");
-    const circularityData = localStorage.getItem("circularityData");
+    const supplyChainData = localStorage.getItem("supplyChainData");
 
     if (productId) {
       setInitialFormValues((prev) => ({
@@ -51,26 +51,26 @@ const Step4 = ({ data, onNext, onPrevious }) => {
         productID: parseInt(productId),
       }));
     }
-    if (circularityData) {
-      const parsedCircularityData = JSON.parse(circularityData);
+    if (supplyChainData) {
+      const parsedSupplyChainData = JSON.parse(supplyChainData);
 
       setInitialFormValues((prev) => ({
         ...prev,
-        ...parsedCircularityData,
+        ...parsedSupplyChainData,
       }));
     }
   }, []);
 
   const handleNext = async (values) => {
-    const circularityDataStorage = localStorage.getItem("circularityData");
-    if (circularityDataStorage) {
-      onNext(values);
+    const supplyChainDataStorage = localStorage.getItem("supplyChainData");
+    if (supplyChainDataStorage) {
+      onFinish();
       return;
     }
     console.log("Values are", values);
     try {
       const response = await axios.post(
-        "https://localhost:7127/api/CircularityInfo",
+        "https://localhost:7127/api/SupplyChainInfo",
         values,
         {
           headers: {
@@ -88,11 +88,11 @@ const Step4 = ({ data, onNext, onPrevious }) => {
       }
 
       localStorage.setItem(
-        "circularityData",
+        "supplyChainData",
         JSON.stringify(updatedFormValues)
       );
 
-      onNext(values);
+      onFinish();
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
@@ -116,135 +116,131 @@ const Step4 = ({ data, onNext, onPrevious }) => {
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"performance"}
-                label={"Performance"}
+                name={"supplierName"}
+                label={"Supplier Name"}
                 fullWidth
                 size="small"
-                error={Boolean(errors.performance && touched.performance)}
-                helperText={touched.performance && errors.performance}
+                error={Boolean(errors.supplierName && touched.supplierName)}
+                helperText={touched.supplierName && errors.supplierName}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"recyclability"}
-                label={"Recyclability"}
-                fullWidth
-                size="small"
-                error={Boolean(errors.recyclability && touched.recyclability)}
-                helperText={touched.recyclability && errors.recyclability}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Field
-                as={TextField}
-                name={"takeBackInstructions"}
-                label={"Take Back Instructions"}
+                name={"supplierLocation"}
+                label={"Supplier Location"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.takeBackInstructions && touched.takeBackInstructions
+                  errors.supplierLocation && touched.supplierLocation
+                )}
+                helperText={touched.supplierLocation && errors.supplierLocation}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Field
+                as={TextField}
+                name={"facilityRegistry"}
+                label={"Facility Registry"}
+                fullWidth
+                size="small"
+                error={Boolean(
+                  errors.facilityRegistry && touched.facilityRegistry
+                )}
+                helperText={touched.facilityRegistry && errors.facilityRegistry}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Field
+                as={TextField}
+                name={"facilityIdentifier"}
+                label={"Facility Identifier"}
+                fullWidth
+                size="small"
+                error={Boolean(
+                  errors.facilityIdentifier && touched.facilityIdentifier
                 )}
                 helperText={
-                  touched.takeBackInstructions && errors.takeBackInstructions
+                  touched.facilityIdentifier && errors.facilityIdentifier
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"recyclingInstructions"}
-                label={"Recycling Instructions"}
+                name={"operatorRegistry"}
+                label={"Operator Registry"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.recyclingInstructions && touched.recyclingInstructions
+                  errors.operatorRegistry && touched.operatorRegistry
+                )}
+                helperText={touched.operatorRegistry && errors.operatorRegistry}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Field
+                as={TextField}
+                name={"operatorIdentifier"}
+                label={"Operator Identifier"}
+                fullWidth
+                size="small"
+                error={Boolean(
+                  errors.operatorIdentifier && touched.operatorIdentifier
                 )}
                 helperText={
-                  touched.recyclingInstructions && errors.recyclingInstructions
+                  touched.operatorIdentifier && errors.operatorIdentifier
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"disassemblyInstructionsSorters"}
-                label={"Disassembly Instructions Sorters"}
+                name={"countryOfOriginConfection"}
+                label={"Country Of Origin Confection"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.disassemblyInstructionsSorters &&
-                    touched.disassemblyInstructionsSorters
+                  errors.countryOfOriginConfection &&
+                    touched.countryOfOriginConfection
                 )}
                 helperText={
-                  touched.disassemblyInstructionsSorters &&
-                  errors.disassemblyInstructionsSorters
+                  touched.countryOfOriginConfection &&
+                  errors.countryOfOriginConfection
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"disassemblyInstructionsUser"}
-                label={"Disassembly Instructions User"}
+                name={"countryOfOriginDyeingPrinting"}
+                label={"Country Of Origin Dyeing Printing"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.disassemblyInstructionsUser &&
-                    touched.disassemblyInstructionsUser
+                  errors.countryOfOriginDyeingPrinting &&
+                    touched.countryOfOriginDyeingPrinting
                 )}
                 helperText={
-                  touched.disassemblyInstructionsUser &&
-                  errors.disassemblyInstructionsUser
+                  touched.countryOfOriginDyeingPrinting &&
+                  errors.countryOfOriginDyeingPrinting
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"circularDesignStrategy"}
-                label={"Circular Design Strategy"}
+                name={"countryOfOriginWeavingKnitting"}
+                label={"Country Of Origin Weaving Knitting"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.circularDesignStrategy &&
-                    touched.circularDesignStrategy
+                  errors.countryOfOriginWeavingKnitting &&
+                    touched.countryOfOriginWeavingKnitting
                 )}
                 helperText={
-                  touched.circularDesignStrategy &&
-                  errors.circularDesignStrategy
-                }
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Field
-                as={TextField}
-                name={"circularDesignStrategyDescription"}
-                label={"Circular Design Strategy Description"}
-                fullWidth
-                size="small"
-                error={Boolean(
-                  errors.circularDesignStrategyDescription &&
-                    touched.circularDesignStrategyDescription
-                )}
-                helperText={
-                  touched.circularDesignStrategyDescription &&
-                  errors.circularDesignStrategyDescription
-                }
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Field
-                as={TextField}
-                name={"repairInstructions"}
-                label={"Repair Instructions"}
-                fullWidth
-                size="small"
-                error={Boolean(
-                  errors.repairInstructions && touched.repairInstructions
-                )}
-                helperText={
-                  touched.repairInstructions && errors.repairInstructions
+                  touched.countryOfOriginWeavingKnitting &&
+                  errors.countryOfOriginWeavingKnitting
                 }
               />
             </Grid>
@@ -263,7 +259,7 @@ const Step4 = ({ data, onNext, onPrevious }) => {
             </Grid>
             <Grid item xs={6} md={6}>
               <Button variant="contained" type="submit">
-                Dalje
+                Završi
               </Button>
             </Grid>
           </Grid>
@@ -273,4 +269,4 @@ const Step4 = ({ data, onNext, onPrevious }) => {
   );
 };
 
-export default Step4;
+export default Step9;

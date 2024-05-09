@@ -5,45 +5,47 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
-const Step4 = ({ data, onNext, onPrevious }) => {
+const Step6 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
     productID: 0,
-    performance: "",
-    recyclability: "",
-    takeBackInstructions: "",
-    recyclingInstructions: "",
-    disassemblyInstructionsSorters: "",
-    disassemblyInstructionsUser: "",
-    circularDesignStrategy: "",
-    circularDesignStrategyDescription: "",
-    repairInstructions: "",
+    harmfulSubstances: "",
+    harmfulSubstancesInfo: "",
+    certifications: "",
+    certificationsValidation: "",
+    chemicalComplianceStandard: "",
+    chemicalComplianceValidation: "",
+    chemicalComplianceScan4ChemLink: "",
+    microfibers: "",
+    traceabilityProvider: "",
   });
 
   const validationSchema = Yup.object().shape({
-    performance: Yup.string().required("Performance je obavezan"),
-    recyclability: Yup.string().required("recyclability je obavezan"),
-    takeBackInstructions: Yup.string().required(
+    harmfulSubstances: Yup.string().required("Performance je obavezan"),
+    harmfulSubstancesInfo: Yup.string().required("recyclability je obavezan"),
+    certifications: Yup.string().required(
       "takeBackInstructions company je obavezan"
     ),
-    recyclingInstructions: Yup.string().required(
-      "recyclingInstructions je obavezan"
+
+    certificationsValidation: Yup.string().required("Performance je obavezan"),
+    chemicalComplianceStandard: Yup.string().required(
+      "recyclability je obavezan"
     ),
-    disassemblyInstructionsSorters: Yup.string(),
-    disassemblyInstructionsUser: Yup.string().required(
-      "disassemblyInstructionsUser location je obavezan"
+    chemicalComplianceValidation: Yup.string().required(
+      "takeBackInstructions company je obavezan"
     ),
-    circularDesignStrategy: Yup.string().required(
-      "circularDesignStrategy je obavezan"
+
+    chemicalComplianceScan4ChemLink: Yup.string().required(
+      "Performance je obavezan"
     ),
-    circularDesignStrategyDescription: Yup.string(),
-    repairInstructions: Yup.string().required(
-      "repairInstructions location je obavezan"
+    microfibers: Yup.string().required("recyclability je obavezan"),
+    traceabilityProvider: Yup.string().required(
+      "takeBackInstructions company je obavezan"
     ),
   });
 
   useEffect(() => {
     const productId = localStorage.getItem("productId");
-    const circularityData = localStorage.getItem("circularityData");
+    const complianceData = localStorage.getItem("complianceData");
 
     if (productId) {
       setInitialFormValues((prev) => ({
@@ -51,26 +53,26 @@ const Step4 = ({ data, onNext, onPrevious }) => {
         productID: parseInt(productId),
       }));
     }
-    if (circularityData) {
-      const parsedCircularityData = JSON.parse(circularityData);
+    if (complianceData) {
+      const parsedComplianceData = JSON.parse(complianceData);
 
       setInitialFormValues((prev) => ({
         ...prev,
-        ...parsedCircularityData,
+        ...parsedComplianceData,
       }));
     }
   }, []);
 
   const handleNext = async (values) => {
-    const circularityDataStorage = localStorage.getItem("circularityData");
-    if (circularityDataStorage) {
+    const complianceDataStorage = localStorage.getItem("complianceData");
+    if (complianceDataStorage) {
       onNext(values);
       return;
     }
     console.log("Values are", values);
     try {
       const response = await axios.post(
-        "https://localhost:7127/api/CircularityInfo",
+        "https://localhost:7127/api/ComplianceInfo",
         values,
         {
           headers: {
@@ -87,10 +89,7 @@ const Step4 = ({ data, onNext, onPrevious }) => {
         }
       }
 
-      localStorage.setItem(
-        "circularityData",
-        JSON.stringify(updatedFormValues)
-      );
+      localStorage.setItem("complianceData", JSON.stringify(updatedFormValues));
 
       onNext(values);
     } catch (error) {
@@ -116,135 +115,135 @@ const Step4 = ({ data, onNext, onPrevious }) => {
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"performance"}
-                label={"Performance"}
-                fullWidth
-                size="small"
-                error={Boolean(errors.performance && touched.performance)}
-                helperText={touched.performance && errors.performance}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Field
-                as={TextField}
-                name={"recyclability"}
-                label={"Recyclability"}
-                fullWidth
-                size="small"
-                error={Boolean(errors.recyclability && touched.recyclability)}
-                helperText={touched.recyclability && errors.recyclability}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Field
-                as={TextField}
-                name={"takeBackInstructions"}
-                label={"Take Back Instructions"}
+                name={"harmfulSubstances"}
+                label={"Harmful Substances"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.takeBackInstructions && touched.takeBackInstructions
+                  errors.harmfulSubstances && touched.harmfulSubstances
                 )}
                 helperText={
-                  touched.takeBackInstructions && errors.takeBackInstructions
+                  touched.harmfulSubstances && errors.harmfulSubstances
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"recyclingInstructions"}
-                label={"Recycling Instructions"}
+                name={"harmfulSubstancesInfo"}
+                label={"Harmful Substances Info"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.recyclingInstructions && touched.recyclingInstructions
+                  errors.harmfulSubstancesInfo && touched.harmfulSubstancesInfo
                 )}
                 helperText={
-                  touched.recyclingInstructions && errors.recyclingInstructions
+                  touched.harmfulSubstancesInfo && errors.harmfulSubstancesInfo
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"disassemblyInstructionsSorters"}
-                label={"Disassembly Instructions Sorters"}
+                name={"certifications"}
+                label={"Certifications"}
+                fullWidth
+                size="small"
+                error={Boolean(errors.certifications && touched.certifications)}
+                helperText={touched.certifications && errors.certifications}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Field
+                as={TextField}
+                name={"certificationsValidation"}
+                label={"Certifications Validation"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.disassemblyInstructionsSorters &&
-                    touched.disassemblyInstructionsSorters
+                  errors.certificationsValidation &&
+                    touched.certificationsValidation
                 )}
                 helperText={
-                  touched.disassemblyInstructionsSorters &&
-                  errors.disassemblyInstructionsSorters
+                  touched.certificationsValidation &&
+                  errors.certificationsValidation
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"disassemblyInstructionsUser"}
-                label={"Disassembly Instructions User"}
+                name={"chemicalComplianceStandard"}
+                label={"chemical Compliance Standard"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.disassemblyInstructionsUser &&
-                    touched.disassemblyInstructionsUser
+                  errors.chemicalComplianceStandard &&
+                    touched.chemicalComplianceStandard
                 )}
                 helperText={
-                  touched.disassemblyInstructionsUser &&
-                  errors.disassemblyInstructionsUser
+                  touched.chemicalComplianceStandard &&
+                  errors.chemicalComplianceStandard
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"circularDesignStrategy"}
-                label={"Circular Design Strategy"}
+                name={"chemicalComplianceValidation"}
+                label={"Chemical Compliance Validation"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.circularDesignStrategy &&
-                    touched.circularDesignStrategy
+                  errors.chemicalComplianceValidation &&
+                    touched.chemicalComplianceValidation
                 )}
                 helperText={
-                  touched.circularDesignStrategy &&
-                  errors.circularDesignStrategy
+                  touched.chemicalComplianceValidation &&
+                  errors.chemicalComplianceValidation
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"circularDesignStrategyDescription"}
-                label={"Circular Design Strategy Description"}
+                name={"chemicalComplianceScan4ChemLink"}
+                label={"Chemical Compliance Scan 4 ChemLink"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.circularDesignStrategyDescription &&
-                    touched.circularDesignStrategyDescription
+                  errors.chemicalComplianceScan4ChemLink &&
+                    touched.chemicalComplianceScan4ChemLink
                 )}
                 helperText={
-                  touched.circularDesignStrategyDescription &&
-                  errors.circularDesignStrategyDescription
+                  touched.chemicalComplianceScan4ChemLink &&
+                  errors.chemicalComplianceScan4ChemLink
                 }
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}
-                name={"repairInstructions"}
-                label={"Repair Instructions"}
+                name={"microfibers"}
+                label={"Microfibers"}
+                fullWidth
+                size="small"
+                error={Boolean(errors.microfibers && touched.microfibers)}
+                helperText={touched.microfibers && errors.microfibers}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Field
+                as={TextField}
+                name={"traceabilityProvider"}
+                label={"Traceability Provider"}
                 fullWidth
                 size="small"
                 error={Boolean(
-                  errors.repairInstructions && touched.repairInstructions
+                  errors.traceabilityProvider && touched.traceabilityProvider
                 )}
                 helperText={
-                  touched.repairInstructions && errors.repairInstructions
+                  touched.traceabilityProvider && errors.traceabilityProvider
                 }
               />
             </Grid>
@@ -273,4 +272,4 @@ const Step4 = ({ data, onNext, onPrevious }) => {
   );
 };
 
-export default Step4;
+export default Step6;
