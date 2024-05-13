@@ -9,203 +9,54 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useState, useEffect } from "react";
+import axios from "../../api/axios";
 
 const columns = [
-  { id: "name", label: "Naziv kompanije", minWidth: 1, align: "center" },
-  { id: "address", label: "Adresa", minWidth: 1, align: "center" },
+  { id: "id", label: "ID", minWidth: 1, align: "center" },
+  { id: "productName", label: "Product Name", minWidth: 1, align: "center" },
   {
-    id: "webpage",
-    label: "Web\u00a0stranica",
+    id: "consumerFacingDescription",
+    label: "Consumer Facing Description",
     minWidth: 1,
     align: "center",
   },
   {
-    id: "licensetype",
-    label: "Tip\u00a0licence",
+    id: "articleNumber",
+    label: "Article Number",
     minWidth: 1,
     align: "center",
   },
-  {
-    id: "license",
-    label: "Licenca",
-    minWidth: 1,
-    align: "center",
-  },
-
-  {
-    id: "gs1",
-    label: "gs1",
-    minWidth: 1,
-    align: "center",
-  },
-];
-
-function createData(name, address, webpage, licensetype, license, gs1) {
-  return { name, address, webpage, licensetype, license, gs1 };
-}
-
-const rows = [
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
-  createData(
-    "PIVARA TUZLA D.D",
-    "Sarajevo bb",
-    "https://www.pivaratuzla.ba/",
-    "GS1 Company Prefix",
-    "3870015",
-    "3870015000008",
-    "GS1 Bosnia and Herzegovina"
-  ),
+  { id: "resalePrice", label: "Resale Price", minWidth: 1, align: "center" },
+  { id: "size", label: "Size", minWidth: 1, align: "center" },
+  { id: "colorGeneral", label: "Color", minWidth: 1, align: "center" },
+  { id: "category", label: "Category", minWidth: 1, align: "center" },
+  { id: "productGroup", label: "Product Group", minWidth: 1, align: "center" },
+  { id: "ageGroup", label: "Age Group", minWidth: 1, align: "center" },
+  { id: "gender", label: "Gender", minWidth: 1, align: "center" },
 ];
 
 const ProductsTable = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7127/api/ProductInfo/all"
+        );
+        setProducts(response.data.data); // Assuming your API response contains the product data directly
+      } catch (error) {
+        console.log("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -237,18 +88,13 @@ const ProductsTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
+              {products
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                .map((product, index) => (
+                  <TableRow key={index}>
                     {columns.map((column) => (
-                      <TableCell
-                        key={`${column.id}-${rowIndex}`}
-                        align={column.align}
-                      >
-                        {column.format && typeof row[column.id] === "number"
-                          ? column.format(row[column.id])
-                          : row[column.id]}
+                      <TableCell key={column.id} align={column.align}>
+                        {product[column.id]}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -260,7 +106,7 @@ const ProductsTable = () => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={products.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

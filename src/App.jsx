@@ -7,6 +7,8 @@ import Dashboard from "./pages/Admin/Dashboard.jsx";
 import Unauthorized from "./components/Unauthorized.jsx";
 import AccountSettings from "./pages/Admin/AccountSettings.jsx";
 import AddProduct from "./pages/Product/AddProduct.jsx";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const roles = {
   Admin: "Admin",
@@ -14,11 +16,30 @@ const roles = {
 };
 
 function App() {
+  const location = useLocation();
+
+  // useEffect(() => {
+  //   const clearLocalStorage = () => {
+  //     if (location.pathname !== "/admin/addProduct") {
+  //       localStorage.clear();
+  //     }
+  //   };
+
+  //   clearLocalStorage();
+
+  //   const unlisten = () => {
+  //     clearLocalStorage();
+  //   };
+
+  //   return unlisten;
+  // }, [location]);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="*" element={<Missing />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/id/:id" element={<Home />} />
 
       <Route element={<RequireAuth allowedRoles={[roles.Admin]} />}>
         <Route path="/admin" element={<Dashboard />} />

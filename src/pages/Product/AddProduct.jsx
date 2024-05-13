@@ -8,6 +8,7 @@ import Step6 from "../Wizard/Steps/Step6";
 import Step7 from "../Wizard/Steps/Step7";
 import Step8 from "../Wizard/Steps/Step8";
 import Step9 from "../Wizard/Steps/Step9";
+import GenerateQrCode from "../Wizard/Steps/GenerateQrCode";
 
 const AddProduct = () => {
   const steps = [
@@ -20,6 +21,7 @@ const AddProduct = () => {
     { title: "Digital Id", component: Step7 },
     { title: "Materijal", component: Step8 },
     { title: "Lanac snabdijevanja", component: Step9 },
+    { title: "QR Kod", component: GenerateQrCode },
   ];
 
   return <Wizard steps={steps} />;

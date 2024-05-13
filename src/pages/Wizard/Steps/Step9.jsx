@@ -64,7 +64,7 @@ const Step9 = ({ data, onNext, onPrevious, onFinish }) => {
   const handleNext = async (values) => {
     const supplyChainDataStorage = localStorage.getItem("supplyChainData");
     if (supplyChainDataStorage) {
-      onFinish();
+      onNext();
       return;
     }
     console.log("Values are", values);
@@ -92,7 +92,7 @@ const Step9 = ({ data, onNext, onPrevious, onFinish }) => {
         JSON.stringify(updatedFormValues)
       );
 
-      onFinish();
+      onNext();
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
@@ -259,7 +259,7 @@ const Step9 = ({ data, onNext, onPrevious, onFinish }) => {
             </Grid>
             <Grid item xs={6} md={6}>
               <Button variant="contained" type="submit">
-                Završi
+                Dalje
               </Button>
             </Grid>
           </Grid>

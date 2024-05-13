@@ -13,7 +13,7 @@ const KeyValueAccordion = ({ title, data }) => {
   const theme = useTheme();
 
   return (
-    <Accordion>
+    <Accordion style={{ minWidth: "500px" }}>
       <AccordionSummary
         expandIcon={
           <img
