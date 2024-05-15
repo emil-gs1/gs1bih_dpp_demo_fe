@@ -18,21 +18,21 @@ const roles = {
 function App() {
   const location = useLocation();
 
-  // useEffect(() => {
-  //   const clearLocalStorage = () => {
-  //     if (location.pathname !== "/admin/addProduct") {
-  //       localStorage.clear();
-  //     }
-  //   };
+  useEffect(() => {
+    const clearLocalStorage = () => {
+      if (location.pathname !== "/admin/addProduct") {
+        localStorage.clear();
+      }
+    };
 
-  //   clearLocalStorage();
+    clearLocalStorage();
 
-  //   const unlisten = () => {
-  //     clearLocalStorage();
-  //   };
+    const unlisten = () => {
+      clearLocalStorage();
+    };
 
-  //   return unlisten;
-  // }, [location]);
+    return unlisten;
+  }, [location]);
 
   return (
     <Routes>

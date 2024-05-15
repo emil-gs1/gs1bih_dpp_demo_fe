@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import logo from "../../assets/img/logo/GS1_Bosnia_Herzegovina_Localised3_PPT_And_Word_2016-11-02.png";
 import ErrorLabel from "./login.styles.jsx";
 import { LOGIN_URL } from "../../api/api.types.js";
+import LoadingButton from "../../components/buttons/LoadingButton.jsx";
 
 const Login = () => {
   const theme = useTheme();
@@ -31,6 +32,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     console.log("from is ", from);
@@ -38,6 +40,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       console.log("Login called");
 
       const promiseToast = toast.promise(
@@ -65,6 +68,8 @@ const Login = () => {
     } catch (err) {
       console.log("Catch login called", err);
       err.response ? setErrMsg(err.response.data) : setErrMsg(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,9 +125,14 @@ const Login = () => {
               }
             />
             <Box sx={loginStyles.loginButton}>
-              <Button onClick={handleLogin} variant="contained">
+              {/* <Button onClick={handleLogin} variant="contained">
                 Prijava
-              </Button>
+              </Button> */}
+              <LoadingButton
+                title={"Prijava"}
+                onClick={handleLogin}
+                isLoading={isLoading}
+              />
             </Box>
           </Box>
         </Grid>
