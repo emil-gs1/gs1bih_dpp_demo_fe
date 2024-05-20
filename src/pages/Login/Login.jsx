@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Typography,
@@ -7,47 +8,44 @@ import {
   Checkbox,
   Container,
   Grid,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { loginStyles } from "./login.styles";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../../assets/img/logo/GS1_Bosnia_Herzegovina_Localised3_PPT_And_Word_2016-11-02.png";
 import ErrorLabel from "./login.styles.jsx";
 import { LOGIN_URL } from "../../api/api.types.js";
 import LoadingButton from "../../components/buttons/LoadingButton.jsx";
+import { useLocation } from "react-router-dom";
+import apiService from "../../api/apiService.js";
 
 const Login = () => {
   const theme = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const styles = loginStyles(isMobile);
   const { setAuth } = useAuth();
-  const [errMsg, setErrMsg] = useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [rememberMe, setRememberMe] = React.useState(false);
+  const [errMsg, setErrMsg] = React.useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    console.log("from is ", from);
-  }, [from]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleLogin = async () => {
     try {
       setIsLoading(true);
-      console.log("Login called");
-
       const promiseToast = toast.promise(
-        axios.post(LOGIN_URL, JSON.stringify({ email, password, rememberMe }), {
-          headers: { "Content-Type": "application/json" },
-          // withCredentials: true,
-        }),
+        apiService.post(
+          LOGIN_URL,
+          JSON.stringify({ email, password, rememberMe })
+        ),
         {
           pending: "Prijava...",
           success: "Uspješna prijava",
@@ -56,17 +54,18 @@ const Login = () => {
       );
 
       const response = await promiseToast;
-      console.log("login repsonse", response);
+      console.log("response login", response);
       if (response.status === 200) {
         const accessToken = response?.data?.data.token;
         const roles = response?.data?.data.roles;
-        setAuth({ email, roles, accessToken }); //pwd removed
+        console.log("From is ", from);
+        console.log("Roles are", roles);
+        setAuth({ email, roles, accessToken });
         setEmail("");
         setPassword("");
         navigate(from);
       }
     } catch (err) {
-      console.log("Catch login called", err);
       err.response ? setErrMsg(err.response.data) : setErrMsg(err.message);
     } finally {
       setIsLoading(false);
@@ -88,7 +87,7 @@ const Login = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Box sx={loginStyles.container}>
+          <Box sx={styles.container}>
             <TextField
               label="Email"
               fullWidth
@@ -124,10 +123,7 @@ const Login = () => {
                 </Typography>
               }
             />
-            <Box sx={loginStyles.loginButton}>
-              {/* <Button onClick={handleLogin} variant="contained">
-                Prijava
-              </Button> */}
+            <Box sx={styles.loginButton}>
               <LoadingButton
                 title={"Prijava"}
                 onClick={handleLogin}

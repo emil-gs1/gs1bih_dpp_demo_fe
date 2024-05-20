@@ -1,51 +1,54 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import React from "react";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Button,
+  ButtonGroup,
+  Box,
+  Modal,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "../../api/axios";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Box from "@mui/material/Box";
-import { toast } from "react-toastify";
-import { axiosPrivate } from "../../api/axios";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
+import apiService from "../../api/apiService";
 
 const columns = [
   { id: "id", label: "ID", minWidth: 1, align: "center" },
-  { id: "productName", label: "Product Name", minWidth: 1, align: "center" },
+  { id: "productName", label: "Product Name", minWidth: 100, align: "center" },
+  { id: "photo", label: "Photo", minWidth: 100, align: "center" },
   {
     id: "consumerFacingDescription",
     label: "Consumer Facing Description",
-    minWidth: 1,
+    minWidth: 100,
     align: "center",
   },
   {
     id: "articleNumber",
     label: "Article Number",
-    minWidth: 1,
+    minWidth: 50,
     align: "center",
   },
-  { id: "resalePrice", label: "Resale Price", minWidth: 1, align: "center" },
-  { id: "size", label: "Size", minWidth: 1, align: "center" },
-  { id: "colorGeneral", label: "Color", minWidth: 1, align: "center" },
-  { id: "category", label: "Category", minWidth: 1, align: "center" },
-  { id: "productGroup", label: "Product Group", minWidth: 1, align: "center" },
-  { id: "ageGroup", label: "Age Group", minWidth: 1, align: "center" },
-  { id: "gender", label: "Gender", minWidth: 1, align: "center" },
+  { id: "resalePrice", label: "Resale Price", minWidth: 50, align: "center" },
+  { id: "size", label: "Size", minWidth: 50, align: "center" },
+  { id: "category", label: "Category", minWidth: 50, align: "center" },
+  { id: "gtin", label: "GTIN", minWidth: 50, align: "center" },
+  {
+    id: "lotNumber",
+    label: "LOT",
+    minWidth: 50,
+    align: "center",
+  },
 ];
 
 const ProductsTable = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -58,7 +61,7 @@ const ProductsTable = () => {
         const response = await axios.get(
           "https://localhost:7127/api/ProductInfo/all"
         );
-        setProducts(response.data.data); // Assuming your API response contains the product data directly
+        setProducts(response.data.data);
       } catch (error) {
         console.log("Error fetching data", error);
       }
@@ -83,8 +86,23 @@ const ProductsTable = () => {
 
   const handleDelete = async () => {
     console.log("Deleting product with ID:", deleteProductId);
-    // Perform delete operation
-    setOpenDeleteModal(false); // Close modal after delete
+    try {
+      const response = await apiService.delete(
+        "/api/ProductInfo?id=" + deleteProductId
+      );
+
+      console.log("Delete response ", response);
+
+      if (response.status === 200) {
+        const updatedProducts = products.filter(
+          (product) => product.id !== deleteProductId
+        );
+        setProducts(updatedProducts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setOpenDeleteModal(false);
   };
 
   const handleOpenDeleteModal = (productId) => {
@@ -95,67 +113,78 @@ const ProductsTable = () => {
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
   };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <div style={{ overflowX: isMobile ? "auto" : "unset" }}>
-        <TableContainer
-          sx={{ maxHeight: isMobile ? "unset" : 600, width: "auto" }}
-        >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {products
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((product, index) => (
-                  <TableRow key={index}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align={column.align}>
-                        {product[column.id]}
-                      </TableCell>
-                    ))}
-                    <TableCell align="right">
-                      <ButtonGroup
-                        size="small"
-                        aria-label="small outlined button group"
+    <Paper style={{ height: "100%", overflow: "hidden" }}>
+      <TableContainer
+        style={{
+          maxHeight: "calc(100vh - 200px)",
+          overflow: "auto",
+          width: isMobile ? "300px" : isTablet ? "500px" : "100%",
+        }}
+      >
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {products
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((product, index) => (
+                <TableRow
+                  key={index}
+                  style={{
+                    backgroundColor: product.isDraft
+                      ? "rgba(255, 0, 0, 0.1)"
+                      : "inherit",
+                  }}
+                >
+                  {columns.map((column) => (
+                    <TableCell key={column.id} align={column.align}>
+                      {getCellContent(product, column)}
+                    </TableCell>
+                  ))}
+                  <TableCell align="right">
+                    <ButtonGroup
+                      size="small"
+                      aria-label="small outlined button group"
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleEdit(product)}
                       >
+                        Edit
+                      </Button>
+                      <Box ml={1}>
                         <Button
                           variant="contained"
-                          color="primary"
-                          onClick={() => handleEdit(product)}
+                          color="secondary"
+                          onClick={() => handleOpenDeleteModal(product.id)}
                         >
-                          Edit
+                          Delete
                         </Button>
-                        <Box ml={1}>
-                          {/* Add margin between the buttons */}
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleOpenDeleteModal(product.id)}
-                          >
-                            Delete
-                          </Button>
-                        </Box>
-                      </ButtonGroup>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+                      </Box>
+                    </ButtonGroup>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
@@ -170,21 +199,23 @@ const ProductsTable = () => {
         onClose={handleCloseDeleteModal}
         aria-labelledby="delete-modal-title"
         aria-describedby="delete-modal-description"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <Paper
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            p: 4,
-          }}
-        >
-          <Typography variant="h6" id="delete-modal-title" align="center">
+        <Paper style={{ width: "80%", maxWidth: "400px", padding: "20px" }}>
+          <Typography variant="h6" align="center">
             Da li ste sigurni da želite izbrisati proizvod?
           </Typography>
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            mt={2}
+            mb={2}
+            sx={{ gap: 2 }}
+          >
             <Button variant="contained" color="primary" onClick={handleDelete}>
               Da
             </Button>
@@ -192,7 +223,6 @@ const ProductsTable = () => {
               variant="contained"
               color="secondary"
               onClick={handleCloseDeleteModal}
-              sx={{ ml: 2 }}
             >
               Ne
             </Button>
@@ -202,5 +232,26 @@ const ProductsTable = () => {
     </Paper>
   );
 };
+
+function getCellContent(product, column) {
+  if (column.id === "photo") {
+    return (
+      <img
+        src={`data:image/jpeg;base64,${product.photo}`}
+        alt="Product Photo"
+        style={{ maxWidth: "100%", maxHeight: "100px" }}
+      />
+    );
+  }
+  if (column.id === "gtin" || column.id === "lotNumber") {
+    if (product.gS1Attributes) {
+      return product.gS1Attributes[column.id] || "";
+    } else {
+      return "";
+    }
+  } else {
+    return product[column.id] || "";
+  }
+}
 
 export default ProductsTable;

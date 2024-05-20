@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "@mui/material";
 import { Container, keyframes } from "@mui/system";
+import { useMediaQuery } from "@mui/material";
 
 const bounce = keyframes({
   "0%": {
@@ -23,7 +24,7 @@ const fadeIn = keyframes({
   },
 });
 
-export const loginStyles = {
+export const loginStyles = (isMobile) => ({
   container: {
     border: "1px solid #f26334",
     position: "absolute",
@@ -33,7 +34,7 @@ export const loginStyles = {
     bgcolor: "background.paper",
     boxShadow: 24,
     borderRadius: 4,
-    width: 350,
+    width: isMobile ? "300px" : "350px", // Adjust width based on mobile or desktop
     p: 4,
     "& .MuiTextField-root": {
       mb: 2,
@@ -53,10 +54,12 @@ export const loginStyles = {
     textAlign: "center",
     animation: `${bounce} 2s ease-in-out infinite, ${fadeIn} 2s ease-in`,
   },
-};
+});
 
 const ErrorLabel = ({ children }) => {
-  return <Container style={loginStyles.errorMessage}>{children}</Container>;
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const styles = loginStyles(isMobile);
+  return <Container style={styles}>{children}</Container>;
 };
 
 export default ErrorLabel;

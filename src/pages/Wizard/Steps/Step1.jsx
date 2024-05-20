@@ -130,7 +130,7 @@ const Step1 = ({ onNext }) => {
   return (
     <>
       <Grid container spacing={1} style={{ marginTop: "20px" }}>
-        <Grid item xs={10}>
+        <Grid item xs={8} sm={10}>
           <TextField
             type="number"
             label="Unesite barkod broj/GTIN"
@@ -142,7 +142,7 @@ const Step1 = ({ onNext }) => {
             sx={{ width: "100%" }}
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={4} sm={2}>
           <LoadingButton
             title={"Pretraga"}
             isLoading={isLoading}
@@ -159,7 +159,7 @@ const Step1 = ({ onNext }) => {
         >
           <Grid container spacing={3}>
             {/* Product Info Section */}
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="primaryTitle">Product Info</Typography>
               <div style={{ marginTop: "20px" }}>
                 {productInfo && (
@@ -202,7 +202,7 @@ const Step1 = ({ onNext }) => {
             </Grid>
             {/* Company Info Section */}
             {companyInfo && (
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="primaryTitle">Company Info</Typography>
                 <div style={{ marginTop: "20px" }}>
                   <TableContainer>

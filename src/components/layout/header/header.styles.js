@@ -1,3 +1,5 @@
+import zIndex from "@mui/material/styles/zIndex";
+
 export const headerStyles = (theme) => ({
   headerContainer: {
     borderBottom: "2px solid #f26334",
@@ -6,6 +8,7 @@ export const headerStyles = (theme) => ({
     left: 0,
     width: "100%",
     backgroundColor: "white",
+    zIndex: 999,
   },
   logoStyle: {
     display: "flex",

@@ -1,9 +1,10 @@
 import { toast } from "react-toastify";
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, useMediaQuery } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import PhotoUploadField from "../../../components/PhotoUploadField";
 
 const Step5 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -14,12 +15,14 @@ const Step5 = ({ data, onNext, onPrevious }) => {
   });
 
   const validationSchema = Yup.object().shape({
-    careImage: Yup.string().required("Performance je obavezan"),
+    careImage: Yup.string().required("Slika je obavezna"),
     careText: Yup.string().required("recyclability je obavezan"),
     safetyInformation: Yup.string().required(
       "takeBackInstructions company je obavezan"
     ),
   });
+  const [base64, setBase64] = useState("");
+  const isDesktop = useMediaQuery("(min-width:960px)");
 
   useEffect(() => {
     const productId = localStorage.getItem("productId");
@@ -88,18 +91,29 @@ const Step5 = ({ data, onNext, onPrevious }) => {
           <Grid
             container
             spacing={2}
-            style={{ padding: "0px 200px 0px 200px" }}
+            style={isDesktop ? { padding: "0px 200px" } : null}
           >
             <Grid item xs={12} md={6}>
               <Field
-                as={TextField}
-                name={"careImage"}
-                label={"Care image"}
-                fullWidth
-                size="small"
+                label="Slika proizvoda"
+                name="careImage"
                 error={Boolean(errors.careImage && touched.careImage)}
                 helperText={touched.careImage && errors.careImage}
-              />
+                required
+              >
+                {({ field }) => (
+                  <PhotoUploadField
+                    base64={field.value}
+                    setBase64={(value) => {
+                      setBase64(value);
+                      field.onChange({ target: { name: field.name, value } });
+                    }}
+                    values={values}
+                    setFormValues={setInitialFormValues}
+                    fieldName={"careImage"}
+                  />
+                )}
+              </Field>
             </Grid>
             <Grid item xs={12} md={6}>
               <Field
@@ -128,11 +142,7 @@ const Step5 = ({ data, onNext, onPrevious }) => {
               />
             </Grid>
           </Grid>
-          <Grid
-            container
-            spacing={2}
-            style={{ marginTop: "10px", padding: "0px 200px 0px 200px" }}
-          >
+          <Grid container spacing={2} style={{ marginTop: "10px" }}>
             <Grid item xs={6} md={6}>
               {data && (
                 <Button variant="contained" onClick={onPrevious}>

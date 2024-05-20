@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import NoProductFound from "./Product/NoProductFound";
+import apiService from "../api/apiService";
 
 const Home = () => {
   //eslint-disable-next-line
@@ -14,6 +15,8 @@ const Home = () => {
   const navigate = useNavigate();
   let { id } = useParams();
   const [productData, setProductData] = useState(null);
+  const [brandData, setBrandData] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,14 +24,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          "https://localhost:7127/api/ProductInfo/id?id=" + id,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+
+        const response = await apiService.get("/api/ProductInfo/id?id=" + id);
         console.log("repsone is ", response);
         setProductData(response.data.data);
       } catch (error) {
@@ -38,28 +35,199 @@ const Home = () => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    const fetchBrandData = async () => {
+      console.log("fetch brand data called");
+      try {
+        setIsLoading(true);
+
+        const response = await apiService.get(
+          "/api/BrandInfo/productId?productId=" + id
+        );
+        console.log("brand repsone is ", response);
+        setBrandData(response.data.data);
+      } catch (error) {
+        console.log("INSIDE CATCH");
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (id) {
+      fetchData();
+      fetchBrandData();
+    }
   }, [id]);
 
   useEffect(() => {
     console.log("Product data is ", productData);
   }, [productData]);
 
-  let productOverview, serialNumber, environmentalImpact, material, certifcates;
+  let productOverview,
+    serialNumber,
+    environmentalImpact,
+    material,
+    certifcates,
+    brandInformation,
+    materialInformation,
+    identifikator,
+    complianceInforamtion,
+    supplyChainInformation;
   if (productData) {
     productOverview = [
-      { key: "GTIN", value: "03870000000204" },
-      { key: "Naziv brenda", value: productData.productName },
+      { key: "Šifra identificiranja", value: "GTIN" },
+      { key: "Naziv proizvoda", value: productData.productName },
+      { key: "Opis artikla", value: productData.consumerFacingDescription },
+      {
+        key: "Šifra artikla u skeniranoj veličini",
+        value: productData.articleNumber,
+      },
+      { key: "Sezona prodaje", value: productData.seasonOfIntendedSale },
+      {
+        key: "Godina početka proizvodnje artikla",
+        value: productData.yearOfIntendedSale,
+      },
+      { key: "Valuta plaćanja", value: productData.priceCurrency },
+      { key: "Cijena artikla", value: productData.resalePrice },
       { key: "Veličina", value: productData.size },
-      { key: "Težina", value: productData.finalProductNetWeight },
-      { key: "Boja", value: productData.colorGeneral },
-      { key: "Glavni materijal", value: productData.productGroup },
+      { key: "Kod zemlje za velicinu", value: productData.countryCodeForSize },
+      { key: "Boja", value: productData.colorBrand },
       { key: "Kategorija", value: productData.category },
-      { key: "Godina prodaje", value: productData.yearOfIntendedSale },
-      { key: "Cijena", value: productData.resalePrice },
+      { key: "Grupa proizvoda", value: productData.productGroup },
+      { key: "Tip proizvoda", value: productData.typeLineConcept },
+      { key: "Vrsta proizvoda", value: productData.itemType },
+      { key: "Za kupce", value: productData.ageGroup },
+      { key: "Spol", value: productData.gender },
+      // { key: "Cjenovni rang", value: productData.resalePrice },
+      { key: "Vodootporno", value: productData.waterProperties },
+      { key: "Tezina artikla", value: productData.finalproductNetWeight },
+      { key: "Jedinica mjere za tezinu", value: productData.unitOfWeight },
     ];
 
-    serialNumber = [{ key: "broj", value: "4722" }];
+    if (productData.gS1Attributes) {
+      const productNameIndex = productOverview.findIndex(
+        (item) => item.key === "Šifra identificiranja"
+      );
+
+      productOverview.splice(productNameIndex + 1, 0, {
+        key: "GTIN",
+        value: productData.gS1Attributes.gtin,
+      });
+      productOverview.splice(productNameIndex + 2, 0, {
+        key: "LOT",
+        value: productData.gS1Attributes.lotNumber,
+      });
+    }
+
+    if (productData.brandInformation) {
+      brandInformation = [
+        { key: "Brand", value: productData.brandInformation.brand },
+        { key: "Sub brand", value: productData.brandInformation.subBrand },
+        {
+          key: "Brand logo",
+          value: (
+            <img
+              src={`data:image/jpeg;base64,${productData.brandInformation.logo}`}
+              alt="Product Image"
+              style={{ maxWidth: "100%", maxHeight: "200px" }}
+            />
+          ),
+        },
+      ];
+    }
+
+    if (productData.materialInformation) {
+      materialInformation = [
+        { key: "Materijal", value: productData.materialInformation.material },
+        {
+          key: "Sastav materijala",
+          value: productData.materialInformation.contentName,
+        },
+        {
+          key: "Reciklirani materijal",
+          value: productData.materialInformation.recycled,
+        },
+        {
+          key: "Procenat recikliranog materijala",
+          value: productData.materialInformation.recycledPercentage,
+        },
+        { key: "Print", value: productData.materialInformation.printInkType },
+        {
+          key: "Sastav materijala konca",
+          value: productData.materialInformation.sewingThreadContent,
+        },
+      ];
+    }
+
+    if (productData.digitalIdentifierInformation) {
+      identifikator = [
+        {
+          key: "Nacin identifikacije",
+          value:
+            productData.digitalIdentifierInformation.dataCarrierIdentifierType,
+        },
+        {
+          key: "Materijal za izradu identifikatora",
+          value:
+            productData.digitalIdentifierInformation
+              .dataCarrierIdentifierMaterial,
+        },
+        {
+          key: "Lokacija identifikatora",
+          value:
+            productData.digitalIdentifierInformation
+              .dataCarrierIdentifierLocation,
+        },
+      ];
+    }
+
+    if (productData.complianceInformation) {
+      complianceInforamtion = [
+        { key: "Sigurnosne informacije", value: "PROVJERITI" },
+        {
+          key: "Opasne materije",
+          value: productData.complianceInformation.harmfulSubstances,
+        },
+        {
+          key: "Detaljne informacije o opasnim materijama",
+          value: productData.complianceInformation.harmfulSubstancesInfo,
+        },
+        {
+          key: "Certifikati",
+          value: productData.complianceInformation.certifications,
+        },
+        {
+          key: "Mikrofiberi",
+          value: productData.complianceInformation.microfibers,
+        },
+        {
+          key: "Uskladjenost hemijskih propisa",
+          value: productData.complianceInformation.chemicalComplianceStandard,
+        },
+      ];
+    }
+
+    if (productData.supplyChainInformation) {
+      supplyChainInformation = [
+        {
+          key: "Dobavljac",
+          value: productData.supplyChainInformation.supplierName,
+        },
+        {
+          key: "Lokacija dobavljaca",
+          value: productData.supplyChainInformation.supplierLocation,
+        },
+        {
+          key: "Drzava porijekla - sivanje",
+          value:
+            productData.supplyChainInformation.countryOfOriginWeavingKnitting,
+        },
+        {
+          key: "Drzava porijekla - krojenje",
+          value:
+            productData.supplyChainInformation.countryOfOriginDyeingPrinting,
+        },
+      ];
+    }
 
     environmentalImpact = [
       { key: "Potrošnja vode, po jedinici", value: "15 000 litara" },
@@ -68,16 +236,6 @@ const Home = () => {
       { key: "Emisije GHG proizvedenog odjevnog predmeta", value: "205,4" },
       { key: "Emisija CO2e, po jedinici ", value: "30kg" },
       { key: "Minimalna trajnost proizvoda u godinama", value: "10 godina" },
-    ];
-    material = [
-      { key: "Reciklirani organski pamuk", value: "90%" },
-      { key: "Poliester", value: "10%" },
-    ];
-
-    certifcates = [
-      { key: "Grüner Knopf", value: "Da" },
-      { key: "C2C Bronze", value: "Da" },
-      { key: "GOTS", value: "Da" },
     ];
   }
   const handleClick = () => {
@@ -118,38 +276,76 @@ const Home = () => {
                 style={{ display: "flex", flex: 1, flexDirection: "column" }}
               >
                 <Typography variant="primaryBigTitle">
-                  Digital Product Pass
+                  Digital Product Passport
                 </Typography>
-                <img
-                  style={{
-                    marginTop: 20,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    display: "block",
-                    width: "20%",
-                  }}
-                  src={tmp}
-                />
+                {productData.photo ? (
+                  <img
+                    style={{
+                      marginTop: 20,
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      display: "block",
+                      width: "30%",
+                    }}
+                    src={`data:image/png;base64,${productData.photo}`}
+                    alt="Product Photo"
+                  />
+                ) : (
+                  <img
+                    style={{
+                      marginTop: 20,
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      display: "block",
+                      width: "20%",
+                    }}
+                    src={tmp}
+                    alt="Default Photo"
+                  />
+                )}
               </div>
 
-              <div>
-                <Button onClick={handleClick}>Click to test</Button>
-              </div>
-              <div style={{ padding: 100 }}>
+              <div style={{ marginTop: "20px" }}>
                 <KeyValueAccordion
-                  title={"Pregled proizvoda"}
+                  title={"Informacije o proizvodu"}
                   data={productOverview}
+                  defaultExpanded={true}
                 />
-                <KeyValueAccordion
-                  title={"Serijski broj"}
-                  data={serialNumber}
-                />
+                {productData.brandInformation && (
+                  <KeyValueAccordion
+                    title={"Brand informacije"}
+                    data={brandInformation}
+                  />
+                )}
+                {productData.materialInformation && (
+                  <KeyValueAccordion
+                    title={"Informacije o materijalima"}
+                    data={materialInformation}
+                  />
+                )}
+                {productData.digitalIdentifierInformation && (
+                  <KeyValueAccordion
+                    title={"Identifikator"}
+                    data={identifikator}
+                  />
+                )}
+                {productData.complianceInformation && (
+                  <KeyValueAccordion
+                    title={"Informacije o uskladjenosti"}
+                    data={complianceInforamtion}
+                  />
+                )}
+                {productData.supplyChainInformation && (
+                  <KeyValueAccordion
+                    title={"Lanac snabdijevanja"}
+                    data={supplyChainInformation}
+                  />
+                )}
+
                 <KeyValueAccordion
                   title={"Uticaj na životnu sredinu"}
                   data={environmentalImpact}
                 />
-                <KeyValueAccordion title={"Materijal"} data={material} />
-                <KeyValueAccordion title={"Certifikati"} data={certifcates} />
               </div>
             </div>
           ) : (

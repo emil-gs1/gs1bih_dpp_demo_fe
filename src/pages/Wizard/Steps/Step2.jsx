@@ -1,10 +1,11 @@
 import { toast } from "react-toastify";
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import PhotoUploadField from "../../../components/PhotoUploadField";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import apiService from "../../../api/apiService";
 
 const Step2 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -36,6 +37,7 @@ const Step2 = ({ data, onNext, onPrevious }) => {
     waterProperties: "",
     finalProductNetWeight: 0,
     unitOfWeight: "",
+    isDraft: true,
   });
 
   const validationSchema = Yup.object().shape({
@@ -62,6 +64,7 @@ const Step2 = ({ data, onNext, onPrevious }) => {
     countryCodeForSize: Yup.string().required(
       "Kod zemlje za veličinu je obavezan"
     ),
+    photo: Yup.string().required("Slika proizvoda je obavezna"),
     colorBrand: Yup.string().required("Boja je obavezna"),
     category: Yup.string().required("Kategorija je obavezna"),
     productGroup: Yup.string().required("Grupa proizvoda je obavezna"),
@@ -77,59 +80,71 @@ const Step2 = ({ data, onNext, onPrevious }) => {
     unitOfWeight: Yup.string().required("Jedinica težine je obavezna"),
   });
 
+  const isDesktop = useMediaQuery("(min-width:960px)");
+
+  const [base64, setBase64] = useState("");
   useEffect(() => {
     const productData = localStorage.getItem("productData");
-
+    console.log("Product data is", productData);
     if (productData) {
       const parsedProductData = JSON.parse(productData);
-      setInitialFormValues((prevValues) => ({
-        ...prevValues,
+      console.log("Parsed product data is: ", parsedProductData);
+      console.log("Photo value: ", parsedProductData.photo);
+      const updatedInitialFormValues = {
         ...parsedProductData,
-      }));
+      };
+      setInitialFormValues(updatedInitialFormValues);
     }
   }, []);
 
-  const handleNext = async (values) => {
-    const parsedDataStorage = localStorage.getItem("productData");
-    if (parsedDataStorage) {
-      onNext(values);
-      return;
-    }
-    console.log("Values are", values);
+  const apiCall = async (url, method, requestValues) => {
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/ProductInfo",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const updatedFormValues = { ...values };
-
-      // Iterate over the response data and update the corresponding fields in form values
-      for (const key in response.data) {
-        if (key in updatedFormValues) {
-          updatedFormValues[key] = response.data[key];
-        }
+      let response;
+      if (method === "post") {
+        response = await apiService.post(url, requestValues);
+      } else if (method === "put") {
+        response = await apiService.put(url, requestValues);
+      } else {
+        return;
       }
 
-      // Save the updated form values to local storage
-      localStorage.setItem("productData", JSON.stringify(updatedFormValues));
+      localStorage.setItem("productData", JSON.stringify(response.data.data));
       localStorage.setItem("productId", response.data.data.id);
 
-      onNext(values);
+      onNext(requestValues);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
     }
   };
 
+  const handleNext = async (values) => {
+    const { photo } = values;
+    console.log("Photo on next is", photo);
+    const parsedDataStorage = localStorage.getItem("productData");
+    if (parsedDataStorage) {
+      const productId = localStorage.getItem("productId");
+      const requestValues = { ...values, id: productId };
+      apiCall("/api/ProductInfo", "put", requestValues);
+      return;
+    }
+    console.log("Values are", values);
+
+    apiCall("/api/ProductInfo", "post", values);
+  };
+
   useEffect(() => {
     console.log("changed initial values ", initialFormValues);
   }, [initialFormValues]);
+
+  // useEffect(() => {
+  //   setInitialFormValues((prevValues) => {
+  //     return {
+  //       ...prevValues,
+  //       photo: base64,
+  //     };
+  //   });
+  // }, [base64, setInitialFormValues]);
 
   return (
     <Formik
@@ -143,7 +158,7 @@ const Step2 = ({ data, onNext, onPrevious }) => {
           <Grid
             container
             spacing={2}
-            style={{ padding: "0px 200px 0px 200px" }}
+            style={isDesktop ? { padding: "0px 200px" } : null}
           >
             <Grid item xs={12} md={6}>
               <Field
@@ -175,8 +190,28 @@ const Step2 = ({ data, onNext, onPrevious }) => {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <PhotoUploadField />
+              <Field
+                label="Slika proizvoda"
+                name="photo"
+                error={Boolean(errors.photo && touched.photo)}
+                helperText={touched.photo && errors.photo}
+                required
+              >
+                {({ field }) => (
+                  <PhotoUploadField
+                    base64={field.value}
+                    setBase64={(value) => {
+                      setBase64(value);
+                      field.onChange({ target: { name: field.name, value } });
+                    }}
+                    values={values}
+                    setFormValues={setInitialFormValues}
+                    fieldName={"photo"}
+                  />
+                )}
+              </Field>
             </Grid>
+
             <Grid item xs={12} md={6}>
               <Field
                 as={TextField}

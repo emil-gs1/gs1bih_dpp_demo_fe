@@ -1,4 +1,4 @@
-import { Wizard } from "../Wizard/Wizard";
+import Wizard from "../Wizard/Wizard";
 import Step1 from "../Wizard/Steps/Step1";
 import Step2 from "../Wizard/Steps/Step2";
 import Step3 from "../Wizard/Steps/Step3";

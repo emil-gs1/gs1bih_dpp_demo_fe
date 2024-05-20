@@ -1,9 +1,11 @@
 import { toast } from "react-toastify";
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, useMediaQuery } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import apiService from "../../../api/apiService";
+import PhotoUploadField from "../../../components/PhotoUploadField";
 
 const Step3 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -21,10 +23,12 @@ const Step3 = ({ data, onNext, onPrevious }) => {
     subBrand: Yup.string().required("Subbrand je obavezan"),
     parentCompany: Yup.string().required("Parent company je obavezan"),
     trader: Yup.string().required("Trader je obavezan"),
-    logo: Yup.string(),
+    logo: Yup.string().required("Slika branda je obavezna"),
     traderLocation: Yup.string().required("Trader location je obavezan"),
   });
 
+  const isDesktop = useMediaQuery("(min-width:960px)");
+  const [base64, setBase64] = useState("");
   useEffect(() => {
     const productId = localStorage.getItem("productId");
     const brandData = localStorage.getItem("brandData");
@@ -38,8 +42,7 @@ const Step3 = ({ data, onNext, onPrevious }) => {
     if (brandData) {
       const parsedBrandData = JSON.parse(brandData);
 
-      setInitialFormValues((prev) => ({
-        ...prev,
+      setInitialFormValues(() => ({
         ...parsedBrandData,
       }));
     }
@@ -55,25 +58,17 @@ const Step3 = ({ data, onNext, onPrevious }) => {
     }
 
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/BrandInfo",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await apiService.post("/api/BrandInfo", values);
 
       const updatedFormValues = { ...values };
 
-      for (const key in response.data) {
-        if (key in updatedFormValues) {
-          updatedFormValues[key] = response.data[key];
-        }
-      }
+      // for (const key in response.data) {
+      //   if (key in updatedFormValues) {
+      //     updatedFormValues[key] = response.data[key];
+      //   }
+      // }
 
-      localStorage.setItem("brandData", JSON.stringify(updatedFormValues));
+      localStorage.setItem("brandData", JSON.stringify(response.data.data));
 
       onNext(values);
     } catch (error) {
@@ -81,6 +76,10 @@ const Step3 = ({ data, onNext, onPrevious }) => {
       toast.error("Error occurred while submitting the form");
     }
   };
+
+  useEffect(() => {
+    console.log("Base 64 here", base64);
+  }, [base64]);
 
   return (
     <Formik
@@ -94,7 +93,7 @@ const Step3 = ({ data, onNext, onPrevious }) => {
           <Grid
             container
             spacing={2}
-            style={{ padding: "0px 200px 0px 200px" }}
+            style={isDesktop ? { padding: "0px 200px" } : null}
           >
             <Grid item xs={12} md={6}>
               <Field
@@ -108,16 +107,26 @@ const Step3 = ({ data, onNext, onPrevious }) => {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              {/* <PhotoUploadField /> */}
               <Field
-                as={TextField}
-                name={"logo"}
-                label={"Logo"}
-                fullWidth
-                size="small"
+                label="Logo"
+                name="logo"
                 error={Boolean(errors.logo && touched.logo)}
                 helperText={touched.logo && errors.logo}
-              />
+                required
+              >
+                {({ field }) => (
+                  <PhotoUploadField
+                    base64={field.value}
+                    setBase64={(value) => {
+                      setBase64(value);
+                      field.onChange({ target: { name: field.name, value } });
+                    }}
+                    values={values}
+                    setFormValues={setInitialFormValues}
+                    fieldName={"logo"}
+                  />
+                )}
+              </Field>
             </Grid>
             <Grid item xs={12} md={6}>
               <Field

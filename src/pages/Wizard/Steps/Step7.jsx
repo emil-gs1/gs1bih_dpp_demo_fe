@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, useMediaQuery } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -22,6 +22,8 @@ const Step7 = ({ data, onNext, onPrevious }) => {
       "takeBackInstructions company je obavezan"
     ),
   });
+
+  const isDesktop = useMediaQuery("(min-width:960px)");
 
   useEffect(() => {
     const productId = localStorage.getItem("productId");
@@ -90,7 +92,7 @@ const Step7 = ({ data, onNext, onPrevious }) => {
           <Grid
             container
             spacing={2}
-            style={{ padding: "0px 200px 0px 200px" }}
+            style={isDesktop ? { padding: "0px 200px" } : null}
           >
             <Grid item xs={12} md={6}>
               <Field
@@ -144,11 +146,7 @@ const Step7 = ({ data, onNext, onPrevious }) => {
               />
             </Grid>
           </Grid>
-          <Grid
-            container
-            spacing={2}
-            style={{ marginTop: "10px", padding: "0px 200px 0px 200px" }}
-          >
+          <Grid container spacing={2} style={{ marginTop: "10px" }}>
             <Grid item xs={6} md={6}>
               {data && (
                 <Button variant="contained" onClick={onPrevious}>
