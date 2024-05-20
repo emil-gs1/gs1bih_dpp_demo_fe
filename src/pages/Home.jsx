@@ -13,19 +13,25 @@ const Home = () => {
   const [users, setUsers] = useState();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  let { id } = useParams();
+  let { gtin, lot } = useParams();
   const [productData, setProductData] = useState(null);
   const [brandData, setBrandData] = useState(null);
-
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    console.log({ gtin }, { lot });
+  }, [gtin, lot]);
 
   useEffect(() => {
     setProductData(null);
     const fetchData = async () => {
       try {
         setIsLoading(true);
+        //https://localhost:7127/api/ProductInfo/gtinlot?gtin=03870000000204&lot=FADeqx
 
-        const response = await apiService.get("/api/ProductInfo/id?id=" + id);
+        const response = await apiService.get(
+          "/api/ProductInfo/gtinlot?gtin=" + gtin + "&lot=" + lot
+        );
         console.log("repsone is ", response);
         setProductData(response.data.data);
       } catch (error) {
@@ -35,28 +41,11 @@ const Home = () => {
         setIsLoading(false);
       }
     };
-    const fetchBrandData = async () => {
-      console.log("fetch brand data called");
-      try {
-        setIsLoading(true);
 
-        const response = await apiService.get(
-          "/api/BrandInfo/productId?productId=" + id
-        );
-        console.log("brand repsone is ", response);
-        setBrandData(response.data.data);
-      } catch (error) {
-        console.log("INSIDE CATCH");
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    if (id) {
+    if (gtin && lot) {
       fetchData();
-      fetchBrandData();
     }
-  }, [id]);
+  }, [gtin, lot]);
 
   useEffect(() => {
     console.log("Product data is ", productData);

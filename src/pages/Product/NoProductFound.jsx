@@ -32,7 +32,7 @@ const NoProductFound = () => {
                 sx={{ maxWidth: "100%", wordWrap: "break-word" }}
               >
                 <a
-                  href={`${baseUrl}/id/${product.id}`}
+                  href={`${baseUrl}/01/${product.gS1Attributes.gtin}/10/${product.gS1Attributes.lotNumber}`}
                   rel="noopener noreferrer"
                 >
                   /01/{product.gS1Attributes.gtin}/10/

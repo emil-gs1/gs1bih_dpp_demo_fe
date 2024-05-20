@@ -39,7 +39,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="*" element={<Missing />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
-      <Route path="/id/:id" element={<Home />} />
+      <Route path="/01/:gtin/10/:lot" element={<Home />} />
       <Route path="/admin" element={<Dashboard />} />
 
       <Route element={<RequireAuth allowedRoles={[roles.Admin]} />}>
