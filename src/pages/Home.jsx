@@ -261,7 +261,9 @@ const Home = () => {
               <div
                 style={{ display: "flex", flex: 1, flexDirection: "column" }}
               >
-                <Typography variant="primaryBigTitle">DPP deploy 1</Typography>
+                <Typography variant="primaryBigTitle">
+                  DPP deploy test 1
+                </Typography>
                 {productData.photo ? (
                   <img
                     style={{
