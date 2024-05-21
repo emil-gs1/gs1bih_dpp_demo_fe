@@ -92,9 +92,7 @@ const TrackAndTrace = () => {
 
   return (
     <div className={isDesktop ? "desktop-container" : null}>
-      <Typography variant="primaryBigTitle">
-        Track and Trace CO2 Usage
-      </Typography>
+      <Typography variant="primaryBigTitle">Track and Trace CO2</Typography>
       <MapComponent positions={positions} locationNames={locationNames} />
       <div className="total-co2">
         <Typography variant="primaryTitle">
