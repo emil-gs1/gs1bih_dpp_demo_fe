@@ -1,12 +1,12 @@
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Button, CircularProgress, Typography, Divider } from "@mui/material";
 import KeyValueAccordion from "../components/KeyValueAccordion";
 import tmp from "../assets/img/tmp/tmp.jpg";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "../api/axios";
 import NoProductFound from "./Product/NoProductFound";
 import apiService from "../api/apiService";
+import locations from "../assets/icons/locations.png";
 
 const Home = () => {
   //eslint-disable-next-line
@@ -15,7 +15,6 @@ const Home = () => {
   const navigate = useNavigate();
   let { gtin, lot } = useParams();
   const [productData, setProductData] = useState(null);
-  const [brandData, setBrandData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -27,8 +26,6 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        //https://localhost:7127/api/ProductInfo/gtinlot?gtin=03870000000204&lot=FADeqx
-
         const response = await apiService.get(
           "/api/ProductInfo/gtinlot?gtin=" + gtin + "&lot=" + lot
         );
@@ -52,10 +49,7 @@ const Home = () => {
   }, [productData]);
 
   let productOverview,
-    serialNumber,
     environmentalImpact,
-    material,
-    certifcates,
     brandInformation,
     materialInformation,
     identifikator,
@@ -86,7 +80,6 @@ const Home = () => {
       { key: "Vrsta proizvoda", value: productData.itemType },
       { key: "Za kupce", value: productData.ageGroup },
       { key: "Spol", value: productData.gender },
-      // { key: "Cjenovni rang", value: productData.resalePrice },
       { key: "Vodootporno", value: productData.waterProperties },
       { key: "Tezina artikla", value: productData.finalproductNetWeight },
       { key: "Jedinica mjere za tezinu", value: productData.unitOfWeight },
@@ -253,6 +246,10 @@ const Home = () => {
     };
   };
 
+  const handleTrackAndTrace = () => {
+    navigate("/track-and-trace");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -274,7 +271,7 @@ const Home = () => {
                       marginLeft: "auto",
                       marginRight: "auto",
                       display: "block",
-                      width: "30%",
+                      width: "40%",
                     }}
                     src={`data:image/png;base64,${productData.photo}`}
                     alt="Product Photo"
@@ -293,7 +290,37 @@ const Home = () => {
                   />
                 )}
               </div>
-
+              <div style={{ marginTop: "20px" }}>
+                <Typography variant="primaryTitle">
+                  {productData.productName}
+                </Typography>
+                <Divider
+                  style={{
+                    width: "40%",
+                    margin: "auto",
+                    backgroundColor: "#f26334",
+                    height: "1px",
+                  }}
+                />
+              </div>
+              <div style={{ marginTop: "10px" }}>
+                <Button variant="contained" onClick={handleTrackAndTrace}>
+                  <img
+                    src={locations}
+                    alt="icon"
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "8px",
+                      filter:
+                        "brightness(0) invert(1) sepia(0) saturate(0) hue-rotate(0deg)",
+                      WebkitFilter:
+                        "brightness(0) invert(1) sepia(0) saturate(0) hue-rotate(0deg)", // For Safari
+                    }}
+                  />
+                  CO2
+                </Button>
+              </div>
               <div style={{ marginTop: "20px" }}>
                 <KeyValueAccordion
                   title={"Informacije o proizvodu"}

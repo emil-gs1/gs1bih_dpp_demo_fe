@@ -96,6 +96,10 @@ export default function CustomizedMenus() {
     navigate("/admin/addProduct");
   };
 
+  const handleTrackAndTrace = () => {
+    navigate("/track-and-trace");
+  };
+
   return (
     <div>
       <Button
@@ -120,6 +124,9 @@ export default function CustomizedMenus() {
         open={open}
         onClose={handleClose}
       >
+        <MenuItem key="logout" onClick={handleTrackAndTrace} disableRipple>
+          Track and trace
+        </MenuItem>
         {loggedIn
           ? [
               <MenuItem key="logout" onClick={handleLogOut} disableRipple>

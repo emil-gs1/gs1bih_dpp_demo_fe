@@ -83,3 +83,18 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.trace-list {
+  margin-top: 20px;
+  padding-bottom: 30px;
+}
+
+.trace-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.trace-item h3 {
+  margin: 0 0 10px 0;
+}

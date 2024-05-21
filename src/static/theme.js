@@ -33,6 +33,16 @@ const theme = createTheme({
       fontSize: "24px",
       fontFamily: "GothamBold",
     },
+    secondaryTitle: {
+      color: "#012c6d",
+      fontSize: "12px",
+      fontFamily: "GothamBold",
+    },
+    secondary: {
+      color: "#012c6d",
+      fontSize: "12px",
+      fontFamily: "Gotham",
+    },
     tableContent: {
       color: "#012c6d",
       fontSize: "12px",
