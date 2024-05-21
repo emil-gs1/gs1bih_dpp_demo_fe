@@ -261,9 +261,7 @@ const Home = () => {
               <div
                 style={{ display: "flex", flex: 1, flexDirection: "column" }}
               >
-                <Typography variant="primaryBigTitle">
-                  Digital Product Passport
-                </Typography>
+                <Typography variant="primaryBigTitle">DPP deploy 1</Typography>
                 {productData.photo ? (
                   <img
                     style={{
