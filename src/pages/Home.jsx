@@ -262,7 +262,7 @@ const Home = () => {
                 style={{ display: "flex", flex: 1, flexDirection: "column" }}
               >
                 <Typography variant="primaryBigTitle">
-                  DPP deploy test 3
+                  DPP deploy test 4
                 </Typography>
                 {productData.photo ? (
                   <img
