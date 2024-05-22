@@ -19,26 +19,26 @@ const roles = {
 function App() {
   const location = useLocation();
 
-  useEffect(() => {
-    // console.log(import.meta.env.VITE_SOME_KEY); // "123"
+  // useEffect(() => {
+  //   // console.log(import.meta.env.VITE_SOME_KEY); // "123"
 
-    const clearLocalStorage = () => {
-      if (
-        location.pathname !== "/admin/addProduct" &&
-        location.pathname !== "/track-and-trace"
-      ) {
-        localStorage.clear();
-      }
-    };
+  //   const clearLocalStorage = () => {
+  //     if (
+  //       location.pathname !== "/admin/addProduct" &&
+  //       location.pathname !== "/track-and-trace"
+  //     ) {
+  //       localStorage.clear();
+  //     }
+  //   };
 
-    clearLocalStorage();
+  //   clearLocalStorage();
 
-    const unlisten = () => {
-      clearLocalStorage();
-    };
+  //   const unlisten = () => {
+  //     clearLocalStorage();
+  //   };
 
-    return unlisten;
-  }, [location]);
+  //   return unlisten;
+  // }, [location]);
 
   return (
     <Routes>

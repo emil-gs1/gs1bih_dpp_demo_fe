@@ -5,6 +5,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import PhotoUploadField from "../../../components/PhotoUploadField";
+import apiService from "../../../api/apiService";
 
 const Step5 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -44,39 +45,35 @@ const Step5 = ({ data, onNext, onPrevious }) => {
     }
   }, []);
 
-  const handleNext = async (values) => {
-    const careDataStorage = localStorage.getItem("careData");
-    if (careDataStorage) {
-      onNext(values);
-      return;
-    }
-    console.log("Values are", values);
+  const apiCall = async (url, method, requestValues) => {
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/CareInfo",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const updatedFormValues = { ...values };
-
-      for (const key in response.data) {
-        if (key in updatedFormValues) {
-          updatedFormValues[key] = response.data[key];
-        }
+      let response;
+      if (method === "post") {
+        response = await apiService.post(url, requestValues);
+      } else if (method === "put") {
+        response = await apiService.put(url, requestValues);
+      } else {
+        return;
       }
 
-      localStorage.setItem("careData", JSON.stringify(updatedFormValues));
+      localStorage.setItem("careData", JSON.stringify(response.data.data));
 
-      onNext(values);
+      onNext(requestValues);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
     }
+  };
+
+  const handleNext = async (values) => {
+    const careDataStorage = localStorage.getItem("careData");
+    if (careDataStorage) {
+      apiCall("/api/CareInfo", "put", values);
+
+      return;
+    }
+    console.log("Values are", values);
+    apiCall("/api/CareInfo", "post", values);
   };
 
   return (

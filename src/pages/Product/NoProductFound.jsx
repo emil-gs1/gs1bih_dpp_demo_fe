@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import KeyValueAccordion from "../../components/KeyValueAccordion";
 import axios from "../../api/axios";
@@ -10,11 +10,13 @@ const NoProductFound = () => {
   const [productsOverview, setProductOverview] = useState(null);
   const baseUrl = `${window.location.origin}/gs1bih_dpp_demo_fe`;
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // console.log("Base url is", baseUrl);
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await apiService.get("/api/ProductInfo/all");
 
         setProducts(response.data.data);
@@ -52,6 +54,8 @@ const NoProductFound = () => {
         setProductOverview(overview);
       } catch (error) {
         console.log("Error fetching data", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -60,14 +64,20 @@ const NoProductFound = () => {
 
   return (
     <>
-      {productsOverview !== null ? (
-        <KeyValueAccordion
-          title={"Proizvodi"}
-          data={productsOverview}
-          defaultExpanded={true}
-        />
+      {isLoading ? (
+        <CircularProgress />
       ) : (
-        <Typography variant="primaryTitle">Nema proizvoda ...</Typography>
+        <>
+          {productsOverview !== null ? (
+            <KeyValueAccordion
+              title={"Proizvodi"}
+              data={productsOverview}
+              defaultExpanded={true}
+            />
+          ) : (
+            <Typography variant="primaryTitle">Nema proizvoda ...</Typography>
+          )}
+        </>
       )}
     </>
   );

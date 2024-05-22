@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import apiService from "../../../api/apiService";
 
 const Step8 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -105,40 +105,35 @@ const Step8 = ({ data, onNext, onPrevious }) => {
     }
   }, []);
 
-  const handleNext = async (values) => {
-    console.log("material handle next called");
-    const materialDataStorage = localStorage.getItem("materialData");
-    if (materialDataStorage) {
-      onNext(values);
-      return;
-    }
-    console.log("Values are", values);
+  const apiCall = async (url, method, requestValues) => {
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/MaterialInfo",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const updatedFormValues = { ...values };
-
-      for (const key in response.data) {
-        if (key in updatedFormValues) {
-          updatedFormValues[key] = response.data[key];
-        }
+      let response;
+      if (method === "post") {
+        response = await apiService.post(url, requestValues);
+      } else if (method === "put") {
+        response = await apiService.put(url, requestValues);
+      } else {
+        return;
       }
 
-      localStorage.setItem("materialData", JSON.stringify(updatedFormValues));
+      localStorage.setItem("materialData", JSON.stringify(response.data.data));
 
-      onNext(values);
+      onNext(requestValues);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
     }
+  };
+
+  const handleNext = async (values) => {
+    console.log("material handle next called");
+    const materialDataStorage = localStorage.getItem("materialData");
+    if (materialDataStorage) {
+      apiCall("/api/MaterialInfo", "put", values);
+      return;
+    }
+    console.log("Values are", values);
+    apiCall("/api/MaterialInfo", "post", values);
   };
 
   return (

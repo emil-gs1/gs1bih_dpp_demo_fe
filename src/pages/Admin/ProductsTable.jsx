@@ -58,9 +58,7 @@ const ProductsTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://localhost:7127/api/ProductInfo/all"
-        );
+        const response = await apiService.get("/api/ProductInfo/all");
         setProducts(response.data.data);
       } catch (error) {
         console.log("Error fetching data", error);

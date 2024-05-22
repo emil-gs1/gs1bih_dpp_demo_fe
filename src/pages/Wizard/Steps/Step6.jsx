@@ -3,7 +3,7 @@ import { Grid, Button, TextField, useMediaQuery } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import apiService from "../../../api/apiService";
 
 const Step6 = ({ data, onNext, onPrevious }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -65,39 +65,38 @@ const Step6 = ({ data, onNext, onPrevious }) => {
     }
   }, []);
 
-  const handleNext = async (values) => {
-    const complianceDataStorage = localStorage.getItem("complianceData");
-    if (complianceDataStorage) {
-      onNext(values);
-      return;
-    }
-    console.log("Values are", values);
+  const apiCall = async (url, method, requestValues) => {
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/ComplianceInfo",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const updatedFormValues = { ...values };
-
-      for (const key in response.data) {
-        if (key in updatedFormValues) {
-          updatedFormValues[key] = response.data[key];
-        }
+      let response;
+      if (method === "post") {
+        response = await apiService.post(url, requestValues);
+      } else if (method === "put") {
+        response = await apiService.put(url, requestValues);
+      } else {
+        return;
       }
 
-      localStorage.setItem("complianceData", JSON.stringify(updatedFormValues));
+      localStorage.setItem(
+        "complianceData",
+        JSON.stringify(response.data.data)
+      );
 
-      onNext(values);
+      onNext(requestValues);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
     }
+  };
+
+  const handleNext = async (values) => {
+    const complianceDataStorage = localStorage.getItem("complianceData");
+    if (complianceDataStorage) {
+      apiCall("/api/ComplianceInfo", "put", values);
+
+      return;
+    }
+    console.log("Values are", values);
+    apiCall("/api/ComplianceInfo", "post", values);
   };
 
   return (

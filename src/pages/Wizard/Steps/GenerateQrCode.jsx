@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import axios from "../../../api/axios";
 import { IconButton } from "@mui/material";
 import { SaveAlt } from "@mui/icons-material";
+import apiService from "../../../api/apiService";
 
 const GenerateQrCode = ({ onFinish }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +12,7 @@ const GenerateQrCode = ({ onFinish }) => {
   const [imageSrc, setImageSrc] = useState("");
   const [gtin, setGtin] = useState("");
   const [productId, setProductId] = useState("");
+  const baseUrl = `${window.location.origin}/gs1bih_dpp_demo_fe`;
 
   useEffect(() => {
     const productIdStorage = localStorage.getItem("productId");
@@ -37,10 +39,10 @@ const GenerateQrCode = ({ onFinish }) => {
   }, [lotNumber, gtin]);
 
   const generateBarcode = async () => {
-    if (lotNumber) {
+    if (lotNumber && gtin) {
       try {
-        const barcodeResponse = await axios.post(
-          "https://localhost:7127/api/Barcode/generate",
+        const barcodeResponse = await apiService.post(
+          "/api/Barcode/generate",
           {
             uri: "https://resolver-st.gs1.org",
             gtin,
@@ -53,7 +55,7 @@ const GenerateQrCode = ({ onFinish }) => {
             responseType: "arraybuffer",
           }
         );
-
+        console.log("Barcode response", barcodeResponse.data);
         if (
           barcodeResponse.data &&
           barcodeResponse.data.byteLength > 0 &&
@@ -62,6 +64,7 @@ const GenerateQrCode = ({ onFinish }) => {
           const byteArray = new Uint8Array(barcodeResponse.data);
           const base64String = btoa(String.fromCharCode.apply(null, byteArray));
           const dataUrl = `data:image/jpeg;base64,${base64String}`;
+
           setImageSrc(dataUrl);
 
           localStorage.setItem("imageSrc", dataUrl);
@@ -78,15 +81,7 @@ const GenerateQrCode = ({ onFinish }) => {
 
   const resolverApi = async (values) => {
     try {
-      const resolverResponse = await axios.post(
-        "https://localhost:7127/api/Resolver",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const resolverResponse = await apiService.post("/api/Resolver", values);
 
       if (resolverResponse.status === 200) {
         // generateBarcode();
@@ -105,11 +100,7 @@ const GenerateQrCode = ({ onFinish }) => {
       const gtinStorage = productInfoJson.gtin;
       setGtin(gtinStorage);
 
-      const response = await axios.get("https://localhost:7127/api/Resolver", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiService.get("/api/Resolver");
 
       if (response && response.data) {
         const lotNumber = response.data;
@@ -129,7 +120,7 @@ const GenerateQrCode = ({ onFinish }) => {
               context: "us",
               mimeType: "text/html",
               linkTitle: "Where to buy",
-              targetUrl: "http://localhost:5173/id/" + productId,
+              targetUrl: baseUrl + "/01/" + gtin + "/10/" + lotNumber,
               defaultLinkType: true,
               defaultLanguage: true,
               defaultContext: true,
@@ -167,19 +158,11 @@ const GenerateQrCode = ({ onFinish }) => {
   const handleFinish = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/GS1Attributes",
-        {
-          productID: productId,
-          gtin,
-          lotNumber,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await apiService.post("/api/GS1Attributes", {
+        productID: productId,
+        gtin,
+        lotNumber,
+      });
 
       console.log("response from finish is", response);
       onFinish();

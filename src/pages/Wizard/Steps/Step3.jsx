@@ -48,33 +48,36 @@ const Step3 = ({ data, onNext, onPrevious }) => {
     }
   }, []);
 
+  const apiCall = async (url, method, requestValues) => {
+    try {
+      let response;
+      if (method === "post") {
+        response = await apiService.post(url, requestValues);
+      } else if (method === "put") {
+        response = await apiService.put(url, requestValues);
+      } else {
+        return;
+      }
+
+      localStorage.setItem("brandData", JSON.stringify(response.data.data));
+
+      onNext(requestValues);
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error occurred while submitting the form");
+    }
+  };
+
   const handleNext = async (values) => {
     console.log("Values are ", values);
 
     const brandDataStorage = localStorage.getItem("brandData");
     if (brandDataStorage) {
-      onNext(values);
+      apiCall("/api/BrandInfo", "put", values);
       return;
     }
 
-    try {
-      const response = await apiService.post("/api/BrandInfo", values);
-
-      const updatedFormValues = { ...values };
-
-      // for (const key in response.data) {
-      //   if (key in updatedFormValues) {
-      //     updatedFormValues[key] = response.data[key];
-      //   }
-      // }
-
-      localStorage.setItem("brandData", JSON.stringify(response.data.data));
-
-      onNext(values);
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error occurred while submitting the form");
-    }
+    apiCall("/api/BrandInfo", "post", values);
   };
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import { Grid, Button, TextField, useMediaQuery } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import apiService from "../../../api/apiService";
 
 const Step9 = ({ data, onNext, onPrevious, onFinish }) => {
   const [initialFormValues, setInitialFormValues] = useState({
@@ -63,42 +63,38 @@ const Step9 = ({ data, onNext, onPrevious, onFinish }) => {
     }
   }, []);
 
-  const handleNext = async (values) => {
-    const supplyChainDataStorage = localStorage.getItem("supplyChainData");
-    if (supplyChainDataStorage) {
-      onNext();
-      return;
-    }
-    console.log("Values are", values);
+  const apiCall = async (url, method, requestValues) => {
     try {
-      const response = await axios.post(
-        "https://localhost:7127/api/SupplyChainInfo",
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const updatedFormValues = { ...values };
-
-      for (const key in response.data) {
-        if (key in updatedFormValues) {
-          updatedFormValues[key] = response.data[key];
-        }
+      let response;
+      if (method === "post") {
+        response = await apiService.post(url, requestValues);
+      } else if (method === "put") {
+        response = await apiService.put(url, requestValues);
+      } else {
+        return;
       }
 
       localStorage.setItem(
         "supplyChainData",
-        JSON.stringify(updatedFormValues)
+        JSON.stringify(response.data.data)
       );
 
-      onNext();
+      onNext(requestValues);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error occurred while submitting the form");
     }
+  };
+
+  const handleNext = async (values) => {
+    const supplyChainDataStorage = localStorage.getItem("supplyChainData");
+    if (supplyChainDataStorage) {
+      apiCall("/api/SupplyChainInfo", "put", values);
+
+      return;
+    }
+    console.log("Values are", values);
+    apiCall("/api/SupplyChainInfo", "post", values);
   };
 
   return (
