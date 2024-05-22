@@ -12,7 +12,7 @@ import Login from "./pages/Login/Login.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/gs1bih_dpp_demo_fe">
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <Routes>

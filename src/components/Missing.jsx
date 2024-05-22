@@ -1,11 +1,17 @@
+import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Missing = () => {
   return (
     <div>
       <div>
-        <h1>Stranica nije pronađena</h1>
-        <p>Stanica koju tražite nije pronađena</p>
+        <Typography variant="primaryBigTitle">
+          Stranica nije pronađena
+        </Typography>
+        <br />
+        <Typography variant="secondary">
+          Stanica koju tražite nije pronađena
+        </Typography>
         <div className="flexGrow">
           <Link to="/">Nazad na početnu stranicu</Link>
         </div>

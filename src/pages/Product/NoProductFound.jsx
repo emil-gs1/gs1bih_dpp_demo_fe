@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 const NoProductFound = () => {
   const [products, setProducts] = useState(null);
   const [productsOverview, setProductOverview] = useState(null);
-  const baseUrl = window.location.origin;
+  const baseUrl = `${window.location.origin}/gs1bih_dpp_demo_fe`;
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Base url is", baseUrl);
+    // console.log("Base url is", baseUrl);
     const fetchData = async () => {
       try {
         const response = await apiService.get("/api/ProductInfo/all");

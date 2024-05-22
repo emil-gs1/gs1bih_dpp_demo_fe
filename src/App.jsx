@@ -20,6 +20,8 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
+    // console.log(import.meta.env.VITE_SOME_KEY); // "123"
+
     const clearLocalStorage = () => {
       if (
         location.pathname !== "/admin/addProduct" &&
