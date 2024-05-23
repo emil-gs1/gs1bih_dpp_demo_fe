@@ -41,7 +41,7 @@ function App() {
   // }, [location]);
 
   return (
-    <Routes>
+    <Routes basename="/gs1bih_dpp_demo_fe">
       <Route path="/" element={<Home />} />
       <Route path="*" element={<Missing />} />
       <Route path="/unauthorized" element={<Unauthorized />} />

@@ -32,12 +32,12 @@ const MapComponent = ({ positions, locationNames }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {positions &&
+      {/* {positions &&
         positions.map((pos, index) => (
           <Marker key={index} position={pos}>
             <Popup>{locationNames[index]}</Popup>
           </Marker>
-        ))}
+        ))} */}
     </MapContainer>
   );
 };

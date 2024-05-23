@@ -12,10 +12,10 @@ import Login from "./pages/Login/Login.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename="/gs1bih_dpp_demo_fe">
+    <BrowserRouter>
       <AuthProvider>
         <ThemeProvider theme={theme}>
-          <Routes>
+          <Routes basename="/gs1bih_dpp_demo_fe">
             <Route path="/login" element={<Login />} />
             <Route
               path="/*"
